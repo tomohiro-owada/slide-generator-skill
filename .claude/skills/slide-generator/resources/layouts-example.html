@@ -2,434 +2,577 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=1920, initial-scale=1.0">
-    <title>Wolsey Design System - 15レイアウトパターン完全版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スライドレイアウト集</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="vendor/prism.css">
+    <script src="vendor/chart.min.js"></script>
+    <script src="vendor/chartjs-plugin-datalabels.min.js"></script>
+    <script src="vendor/prism.js"></script>
+    <script src="vendor/prism-javascript.min.js"></script>
 </head>
 <body>
-    <!-- 1. タイトルスライド -->
-    <section class="slide title-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-        </div>
+    <div class="slides">
 
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-            <div class="shape shape-5"></div>
-        </div>
+        <!-- 1. タイトルスライド -->
+        <section class="slide title-slide">
+            <div class="logo-container">
+                <img src="logo.svg" alt="Logo" class="logo">
+            </div>
+            <h1>プレゼンテーションタイトル</h1>
+            <p class="subtitle">サブタイトル・日付・発表者名</p>
+        </section>
 
-        <div class="slide-content">
-            <h1>Wolseyデザインシステム<br>15レイアウトパターン</h1>
-        </div>
-        <span class="page-number">1</span>
-    </section>
+        <!-- 2. 箇条書きスライド -->
+        <section class="slide">
+            <h2>箇条書きスライド</h2>
+            <ul>
+                <li>主要なポイント1</li>
+                <li>主要なポイント2</li>
+                <li>主要なポイント3</li>
+                <li>主要なポイント4</li>
+            </ul>
+        </section>
 
-    <!-- 2. 2カラムレイアウト（テキスト＋画像） -->
-    <section class="slide two-column">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-        </div>
-
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-        </div>
-
-        <div class="slide-content" style="display: flex;">
-            <div class="column-left">
-                <h2>2カラムレイアウト</h2>
-                <p class="body-large">複雑なアイデアは、1枚の静止画像だけで伝えることができ、大量のデータを素早く吸収することが可能になります。</p>
-                <ul class="bullet-list">
-                    <li>視覚的な要素が重要</li>
-                    <li>テキストとのバランスを保つ</li>
-                    <li>画像は高品質なものを使用</li>
+        <!-- 3. 2カラムスライド -->
+        <section class="slide two-column">
+            <div class="column">
+                <h2>左側の内容</h2>
+                <ul>
+                    <li>ポイント1</li>
+                    <li>ポイント2</li>
+                    <li>ポイント3</li>
                 </ul>
             </div>
-            <div class="column-right">
-                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800" alt="Sample Image">
+            <div class="column">
+                <h2>右側の内容</h2>
+                <p>右側には説明文や補足情報を配置できます。左右で異なる情報を対比させる際に便利です。</p>
             </div>
-        </div>
-        <span class="page-number">2</span>
-    </section>
+        </section>
 
-    <!-- 3. 引用スライド -->
-    <section class="slide quote-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-        </div>
+        <!-- 4. 画像中心スライド -->
+        <section class="slide image-center">
+            <h2>画像中心スライド</h2>
+            <img src="https://via.placeholder.com/800x450" alt="サンプル画像">
+            <p>画像の説明やキャプションをここに記載</p>
+        </section>
 
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-            <div class="shape shape-5"></div>
-        </div>
-
-        <div class="slide-content">
-            <blockquote class="quote">
-                引用文は、インスピレーションを与え、読者から哲学的な考えを引き出すための手段として一般的に印刷されています
+        <!-- 5. 引用スライド -->
+        <section class="slide quote-slide">
+            <blockquote>
+                ここに重要な引用文や印象的な言葉を配置します。大きく表示されるため、メッセージが強調されます。
             </blockquote>
-        </div>
-        <span class="page-number">3</span>
-    </section>
+            <cite>— 引用元・著者名</cite>
+        </section>
 
-    <!-- 4. 箇条書きスライド -->
-    <section class="slide bullet-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-        </div>
+        <!-- 6. セクション区切りスライド -->
+        <section class="slide section-slide">
+            <h2>第2章</h2>
+            <p>新しいセクションの開始</p>
+        </section>
 
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-            <div class="shape shape-5"></div>
-        </div>
+        <!-- 7. テーブルスライド -->
+        <section class="slide table-slide">
+            <h2>比較表スライド</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>プランA</th>
+                        <th>プランB</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>価格</td>
+                        <td>¥1,000</td>
+                        <td>¥2,000</td>
+                    </tr>
+                    <tr>
+                        <td>機能</td>
+                        <td>基本</td>
+                        <td>プレミアム</td>
+                    </tr>
+                    <tr>
+                        <td>サポート</td>
+                        <td>メール</td>
+                        <td>電話・メール</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
 
-        <div class="slide-content">
-            <h2>箇条書きスライド</h2>
-            <ul class="bullet-list">
-                <li>ここにアイテムのリストがあります</li>
-                <li>いくつかのテキスト</li>
-                <li>スライドにコンテンツを詰め込みすぎないように注意してください</li>
-            </ul>
-            <p class="body-large" style="margin-top: 48px;">
-                聴衆はあなたの話を聞くか、コンテンツを読むかのどちらかですが、両方は行いません。
-            </p>
-        </div>
-        <span class="page-number">4</span>
-    </section>
-
-    <!-- 5. 3カラムレイアウト -->
-    <section class="slide three-column">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-        </div>
-
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-            <div class="shape shape-5"></div>
-        </div>
-
-        <div class="slide-content">
-            <h2>3カラムレイアウト</h2>
-            <div class="columns">
-                <div class="column">
-                    <h4>機能1</h4>
-                    <p>金、バター、熟したレモンの色です。可視光のスペクトルにおいて、黄色は緑とオレンジの間にあります。</p>
-                </div>
-                <div class="column">
-                    <h4>機能2</h4>
-                    <p>晴れた空と深海の色です。光学スペクトルでは紫と緑の間に位置しています。</p>
-                </div>
-                <div class="column">
-                    <h4>機能3</h4>
-                    <p>血の色であり、このため歴史的に犠牲、危険、勇気と関連付けられてきました。</p>
-                </div>
-            </div>
-        </div>
-        <span class="page-number">5</span>
-    </section>
-
-    <!-- 6. 全画面画像スライド -->
-    <section class="slide full-image" style="background-image: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920');">
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1" style="opacity: 0.4;"></div>
-            <div class="shape shape-2" style="opacity: 0.4;"></div>
-            <div class="shape shape-3" style="opacity: 0.4;"></div>
-        </div>
-
-        <div class="slide-content">
-            <h2 style="font-size: 72px; font-weight: 900;">大きなインパクトが欲しい？<br>大きな画像を使おう。</h2>
-        </div>
-        <span class="page-number" style="color: white;">6</span>
-    </section>
-
-    <!-- 7. エンディング/クレジットスライド -->
-    <section class="slide credits-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-        </div>
-
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-            <div class="shape shape-5"></div>
-        </div>
-
-        <div class="slide-content">
-            <h2>クレジット</h2>
-            <p style="font-size: 20px; max-width: 900px;">
-                これらの素晴らしいリソースを無料で公開してくれたすべての人々に感謝します：
-            </p>
-            <ul style="margin-top: 32px; font-size: 20px; max-width: 900px;">
-                <li>プレゼンテーションテンプレート by SlidesCarnival</li>
-                <li>写真 by Unsplash</li>
-            </ul>
-        </div>
-        <span class="page-number">7</span>
-    </section>
-
-    <!-- 8. プロフィール/自己紹介スライド -->
-    <section class="slide profile-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-        </div>
-
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-            <div class="shape shape-4"></div>
-        </div>
-
-        <div class="slide-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" alt="Profile" class="profile-image">
-            <h3 class="accent-heading">山田太郎</h3>
-            <p class="profile-title">プロダクトマネージャー</p>
-            <p class="profile-bio">
-                テクノロジーとデザインの交差点で働くことに情熱を注いでいます。
-                ユーザー中心の製品開発を通じて、人々の生活を豊かにすることを目指しています。
-            </p>
-        </div>
-        <span class="page-number">8</span>
-    </section>
-
-    <!-- 9. セクション区切りスライド -->
-    <section class="slide section-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-        </div>
-
-        <div class="slide-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
-            <h2>セクション2</h2>
-            <p>新しいトピックの始まり</p>
-        </div>
-        <span class="page-number">9</span>
-    </section>
-
-    <!-- 10. コード表示スライド -->
-    <section class="slide code-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-        </div>
-
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-        </div>
-
-        <div class="slide-content">
-            <h2>コードスライド</h2>
-            <pre><code>function greet(name) {
-  return `Hello, ${name}!`;
+        <!-- 8. コード表示スライド -->
+        <section class="slide code-slide">
+            <h2>コードサンプル</h2>
+            <pre><code class="language-javascript">function greet(name) {
+    console.log(`Hello, ${name}!`);
+    return `Welcome to the presentation`;
 }
 
-// 使用例
-const message = greet('World');
-console.log(message); // "Hello, World!"
+greet("World");</code></pre>
+        </section>
 
-// 複数の引数
-function add(a, b) {
-  return a + b;
-}</code></pre>
-        </div>
-        <span class="page-number">10</span>
-    </section>
+        <!-- 9. フルサイズ画像背景スライド -->
+        <section class="slide full-image" style="background-image: url('https://via.placeholder.com/1920x1080');">
+            <div class="content">
+                <h2>インパクトのあるメッセージ</h2>
+                <p>背景画像を使った印象的なスライド</p>
+            </div>
+        </section>
 
-    <!-- 11. グラフ/チャートスライド -->
-    <section class="slide chart-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-        </div>
+        <!-- 10. 自己紹介スライド -->
+        <section class="slide profile-slide">
+            <img src="https://via.placeholder.com/200" alt="プロフィール画像" class="profile-image">
+            <div class="profile-name">佐藤 花子</div>
+            <div class="profile-title">UXデザイナー / フロントエンドエンジニア</div>
+            <div class="profile-bio">
+                ユーザー中心のデザインを心がけ、美しく使いやすいインターフェースの設計に取り組んでいます。
+                デザインとエンジニアリングの架け橋として、より良いプロダクトを作ることが私のミッションです。
+            </div>
+            <div class="profile-contact">
+                <a href="mailto:sato@example.com">📧 sato@example.com</a>
+                <a href="https://twitter.com/sato" target="_blank">🐦 @sato</a>
+                <a href="https://dribbble.com/sato" target="_blank">🎨 dribbble.com/sato</a>
+            </div>
+        </section>
 
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-        </div>
+        <!-- 11. 終了スライド -->
+        <section class="slide ending-slide">
+            <h2>ありがとうございました</h2>
+            <p>ご清聴ありがとうございました</p>
+            <div class="contact">
+                <p>contact@example.com</p>
+                <p>https://example.com</p>
+            </div>
+        </section>
 
-        <div class="slide-content">
+        <!-- 12. グラフスライド（棒グラフ） -->
+        <section class="slide chart-slide">
             <h2>売上推移</h2>
             <div class="chart-container">
-                <div style="text-align: center; padding: 100px 0; color: var(--cool-gray);">
-                    <p style="font-size: 24px;">[ Chart.js グラフをここに配置 ]</p>
-                    <p style="font-size: 16px; margin-top: 16px;">棒グラフ、折れ線グラフ、円グラフなど</p>
-                </div>
+                <canvas id="barChart"></canvas>
             </div>
-        </div>
-        <span class="page-number">11</span>
-    </section>
+        </section>
 
-    <!-- 12. 2つのグラフ並列スライド -->
-    <section class="slide dual-chart-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-        </div>
-
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-        </div>
-
-        <h2>比較分析</h2>
-        <div class="slide-content" style="display: flex;">
+        <!-- 12. 2つのグラフ並列 -->
+        <section class="slide dual-chart-slide">
+            <h2>データ分析</h2>
             <div class="chart-wrapper">
-                <h3>製品A</h3>
+                <h3>市場シェア</h3>
                 <div class="chart-container">
-                    <div style="text-align: center; padding: 80px 20px; color: var(--cool-gray);">
-                        <p style="font-size: 20px;">グラフ1</p>
-                    </div>
+                    <canvas id="pieChart"></canvas>
                 </div>
             </div>
             <div class="chart-wrapper">
-                <h3>製品B</h3>
+                <h3>成長率</h3>
                 <div class="chart-container">
-                    <div style="text-align: center; padding: 80px 20px; color: var(--cool-gray);">
-                        <p style="font-size: 20px;">グラフ2</p>
-                    </div>
+                    <canvas id="lineChart"></canvas>
                 </div>
             </div>
-        </div>
-        <span class="page-number">12</span>
-    </section>
+        </section>
 
-    <!-- 13. グラフ+テキスト並列スライド -->
-    <section class="slide chart-text-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-        </div>
-
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-        </div>
-
-        <div class="slide-content">
+        <!-- 13. グラフ+テキスト並列 -->
+        <section class="slide chart-text-slide">
             <div class="chart-section">
                 <div class="chart-container">
-                    <div style="text-align: center; padding: 100px 20px; color: var(--cool-gray);">
-                        <p style="font-size: 20px;">[ データビジュアライゼーション ]</p>
-                    </div>
+                    <canvas id="mixedChart"></canvas>
                 </div>
             </div>
             <div class="text-section">
-                <h2>主要な洞察</h2>
-                <ul class="bullet-list">
-                    <li>売上が前年比30%増加</li>
-                    <li>新規顧客が2倍に成長</li>
-                    <li>顧客満足度が95%達成</li>
+                <h2>主要な発見</h2>
+                <ul>
+                    <li>売上が前年比150%増加</li>
+                    <li>新規顧客が大幅に増加</li>
+                    <li>リピート率が向上</li>
+                    <li>市場シェアが拡大</li>
                 </ul>
-                <p style="margin-top: 24px;">
-                    これらの成果は、チーム全体の献身的な努力の結果です。
-                </p>
+                <p>この成長は、新製品の投入と積極的なマーケティング戦略によるものです。</p>
             </div>
-        </div>
-        <span class="page-number">13</span>
-    </section>
+        </section>
 
-    <!-- 14. Before/After差分スライド -->
-    <section class="slide diff-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-        </div>
-
-        <h2>改善前後の比較</h2>
-        <div class="slide-content">
+        <!-- 14. 差分確認スライド（Before/After） -->
+        <section class="slide diff-slide">
+            <h2>改善ポイント</h2>
             <div class="diff-container">
                 <div class="diff-panel before">
-                    <h3>改善前</h3>
+                    <h3>Before</h3>
                     <div class="diff-content">
                         <ul>
-                            <li>ページ読み込み時間: 5秒</li>
-                            <li>ユーザー満足度: 65%</li>
-                            <li>コンバージョン率: 2%</li>
-                            <li>バグ報告数: 月50件</li>
+                            <li>処理時間が遅い</li>
+                            <li>エラーが頻発</li>
+                            <li>UIが使いにくい</li>
+                            <li>メモリ消費が大きい</li>
                         </ul>
                     </div>
                 </div>
                 <div class="diff-panel after">
-                    <h3>改善後</h3>
+                    <h3>After</h3>
                     <div class="diff-content">
                         <ul>
-                            <li>ページ読み込み時間: 1.5秒</li>
-                            <li>ユーザー満足度: 92%</li>
-                            <li>コンバージョン率: 5.5%</li>
-                            <li>バグ報告数: 月10件</li>
+                            <li>処理速度が3倍向上</li>
+                            <li>エラー率を90%削減</li>
+                            <li>直感的なUIに刷新</li>
+                            <li>メモリ使用量を50%削減</li>
                         </ul>
                     </div>
                 </div>
             </div>
-        </div>
-        <span class="page-number">14</span>
-    </section>
+        </section>
 
-    <!-- 15. ワンライン強調メッセージスライド -->
-    <section class="slide oneline-slide">
-        <div class="geometric-decoration top-left">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-        </div>
-
-        <div class="geometric-decoration bottom-right">
-            <div class="shape shape-1"></div>
-            <div class="shape shape-2"></div>
-            <div class="shape shape-3"></div>
-        </div>
-
-        <div class="slide-content">
-            <div class="message accent">
-                ありがとうございました！
+        <!-- 15. 差分確認スライド（コード比較） -->
+        <section class="slide diff-slide">
+            <h2>コードリファクタリング</h2>
+            <div class="diff-container">
+                <div class="diff-panel before">
+                    <h3>Before</h3>
+                    <div class="diff-content">
+                        <pre><code class="language-javascript">function getData() {
+  var result = [];
+  for (var i = 0; i < data.length; i++) {
+    if (data[i].active == true) {
+      result.push(data[i]);
+    }
+  }
+  return result;
+}</code></pre>
+                    </div>
+                </div>
+                <div class="diff-panel after">
+                    <h3>After</h3>
+                    <div class="diff-content">
+                        <pre><code class="language-javascript">function getData() {
+  return data.filter(
+    item => item.active
+  );
+}</code></pre>
+                    </div>
+                </div>
             </div>
-            <div class="submessage">
-                ご質問はありますか？
-            </div>
-        </div>
-        <span class="page-number">15</span>
-    </section>
+        </section>
 
-    <script src="script.js"></script>
+        <!-- 16. ワンラインテキストオンリー -->
+        <section class="slide oneline-slide">
+            <div class="message">
+                Think Different
+            </div>
+        </section>
+
+        <!-- 17. ワンラインテキストオンリー（サブメッセージ付き） -->
+        <section class="slide oneline-slide">
+            <div class="message medium">
+                シンプルは究極の洗練である
+            </div>
+            <p class="submessage">— レオナルド・ダ・ヴィンチ</p>
+        </section>
+
+        <!-- 18. ワンラインテキストオンリー（小サイズ） -->
+        <section class="slide oneline-slide">
+            <div class="message small">
+                質問はありますか？
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // スライド操作
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(n) {
+            slides.forEach((slide, index) => {
+                slide.style.display = index === n ? 'flex' : 'none';
+            });
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) {
+                currentSlide++;
+                showSlide(currentSlide);
+            } else if (e.key === 'ArrowLeft' && currentSlide > 0) {
+                currentSlide--;
+                showSlide(currentSlide);
+            } else if (e.key === 'Home') {
+                currentSlide = 0;
+                showSlide(currentSlide);
+            } else if (e.key === 'End') {
+                currentSlide = slides.length - 1;
+                showSlide(currentSlide);
+            }
+        });
+
+        // 進捗バー（セグメント型）
+        const progressBar = document.createElement('div');
+        progressBar.className = 'progress-bar';
+        document.body.appendChild(progressBar);
+
+        // スライド数分のセグメントを生成
+        const segments = [];
+        for (let i = 0; i < slides.length; i++) {
+            const segment = document.createElement('div');
+            segment.className = 'progress-segment';
+            segment.addEventListener('click', () => {
+                currentSlide = i;
+                showSlide(currentSlide);
+                updatePageNumber();
+                updateProgressBar();
+            });
+            progressBar.appendChild(segment);
+            segments.push(segment);
+        }
+
+        function updateProgressBar() {
+            segments.forEach((segment, index) => {
+                if (index <= currentSlide) {
+                    segment.classList.add('active');
+                } else {
+                    segment.classList.remove('active');
+                }
+            });
+        }
+
+        // サムネイルツールチップ
+        const tooltip = document.createElement('div');
+        tooltip.className = 'thumbnail-tooltip';
+        const tooltipImg = document.createElement('img');
+        tooltip.appendChild(tooltipImg);
+        document.body.appendChild(tooltip);
+
+        // サムネイルキャッシュ
+        const thumbnails = {};
+
+        // サムネイル生成関数
+        async function generateThumbnail(slideIndex) {
+            if (thumbnails[slideIndex]) {
+                return thumbnails[slideIndex];
+            }
+
+            const slide = slides[slideIndex];
+            const wasCurrentSlide = slideIndex === currentSlide;
+
+            // z-indexとopacityで非表示にしてキャプチャ
+            const originalZIndex = slide.style.zIndex;
+            const originalOpacity = slide.style.opacity;
+            const originalDisplay = slide.style.display;
+
+            slide.style.display = 'flex';
+            slide.style.zIndex = '-1';
+            slide.style.opacity = '0';
+
+            try {
+                const canvas = await html2canvas(slide, {
+                    scale: 0.2,
+                    backgroundColor: '#f8f9fa',
+                    logging: false,
+                    useCORS: true
+                });
+                const thumbnail = canvas.toDataURL();
+                thumbnails[slideIndex] = thumbnail;
+                return thumbnail;
+            } catch (error) {
+                console.error('サムネイル生成エラー:', error);
+                return null;
+            } finally {
+                // 元の状態に戻す
+                slide.style.zIndex = originalZIndex;
+                slide.style.opacity = originalOpacity;
+                if (!wasCurrentSlide) {
+                    slide.style.display = 'none';
+                } else {
+                    slide.style.display = 'flex';
+                }
+            }
+        }
+
+        // セグメントにホバーイベント追加
+        segments.forEach((segment, index) => {
+            segment.addEventListener('mouseenter', async () => {
+                const thumbnail = await generateThumbnail(index);
+                if (thumbnail) {
+                    tooltipImg.src = thumbnail;
+                    tooltip.classList.add('visible');
+                }
+            });
+
+            segment.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('visible');
+            });
+        });
+
+        // ページ番号表示（オプション）
+        const pageNumber = document.createElement('div');
+        pageNumber.style.cssText = 'position: fixed; bottom: 20px; right: 20px; font-size: 1.2rem; color: #023047; opacity: 0.7; z-index: 1000;';
+        document.body.appendChild(pageNumber);
+
+        function updatePageNumber() {
+            pageNumber.textContent = `${currentSlide + 1} / ${slides.length}`;
+        }
+
+        document.addEventListener('keydown', () => {
+            updatePageNumber();
+            updateProgressBar();
+        });
+
+        // 初期化
+        // URLクエリパラメータからページ番号を取得（?p=1 形式）
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageParam = urlParams.get('p');
+        if (pageParam) {
+            const pageNumber = parseInt(pageParam, 10);
+            if (pageNumber >= 1 && pageNumber <= slides.length) {
+                currentSlide = pageNumber - 1; // 1始まりを0始まりに変換
+            }
+        }
+        showSlide(currentSlide);
+        updatePageNumber();
+        updateProgressBar();
+
+        // Chart.js グラフの初期化
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#023047',
+                        font: { size: 14 }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    ticks: { color: '#023047' },
+                    grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                },
+                x: {
+                    ticks: { color: '#023047' },
+                    grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                }
+            }
+        };
+
+        // 棒グラフ
+        const barChart = new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                datasets: [{
+                    label: '売上（百万円）',
+                    data: [12, 19, 15, 25, 22, 30],
+                    backgroundColor: 'rgba(33, 158, 188, 0.7)',
+                    borderColor: '#219ebc',
+                    borderWidth: 2
+                }]
+            },
+            options: commonOptions
+        });
+
+        // 円グラフ
+        const pieChart = new Chart(document.getElementById('pieChart'), {
+            type: 'pie',
+            data: {
+                labels: ['製品A', '製品B', '製品C', '製品D'],
+                datasets: [{
+                    data: [30, 25, 25, 20],
+                    backgroundColor: [
+                        '#3b82f6',  // ブルー
+                        '#10b981',  // グリーン
+                        '#f59e0b',  // アンバー
+                        '#ef4444'   // レッド
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#023047',
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 折れ線グラフ
+        const lineChart = new Chart(document.getElementById('lineChart'), {
+            type: 'line',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: '成長率（%）',
+                    data: [15, 25, 35, 45],
+                    borderColor: '#219ebc',
+                    backgroundColor: 'rgba(33, 158, 188, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+
+        // 混合グラフ（棒グラフ+折れ線グラフ）
+        const mixedChart = new Chart(document.getElementById('mixedChart'), {
+            type: 'bar',
+            data: {
+                labels: ['2019', '2020', '2021', '2022', '2023', '2024'],
+                datasets: [{
+                    type: 'bar',
+                    label: '売上',
+                    data: [100, 120, 140, 180, 220, 280],
+                    backgroundColor: 'rgba(33, 158, 188, 0.7)',
+                    borderColor: '#219ebc',
+                    borderWidth: 2
+                }, {
+                    type: 'line',
+                    label: '利益',
+                    data: [20, 30, 40, 60, 80, 120],
+                    borderColor: '#ffb703',
+                    backgroundColor: 'rgba(255, 183, 3, 0.2)',
+                    tension: 0.4
+                }]
+            },
+            options: commonOptions
+        });
+
+        // クリック時の強調エフェクト
+        document.addEventListener('click', function(e) {
+            // クリック可能な要素を定義
+            const clickableSelectors = [
+                'h1', 'h2', 'h3', 'p', 'li', 'blockquote', 'td', 'th',
+                '.card', '.chart-container', 'pre', 'table', '.diff-panel',
+                '.card-title', '.card-subtitle', '.card-description'
+            ];
+
+            // クリックされた要素を取得
+            let targetElement = null;
+            for (let selector of clickableSelectors) {
+                if (e.target.matches(selector) || e.target.closest(selector)) {
+                    targetElement = e.target.matches(selector) ? e.target : e.target.closest(selector);
+                    break;
+                }
+            }
+
+            if (targetElement) {
+                // 既存のハイライトを削除
+                document.querySelectorAll('.highlighted').forEach(el => {
+                    el.classList.remove('highlighted');
+                });
+
+                // 新しい要素をハイライト
+                targetElement.classList.add('highlighted');
+
+                // 0.6秒後にハイライトを削除
+                setTimeout(() => {
+                    targetElement.classList.remove('highlighted');
+                }, 600);
+            }
+        });
+    </script>
 </body>
 </html>
