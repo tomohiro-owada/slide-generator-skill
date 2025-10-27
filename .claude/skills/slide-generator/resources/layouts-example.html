@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>全レイアウトサンプル - スライドジェネレーター</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="vendor/prism.css">
+    <script src="vendor/chart.min.js"></script>
+    <script src="vendor/chartjs-plugin-datalabels.min.js"></script>
+    <script src="vendor/prism.js"></script>
+    <script src="vendor/prism-javascript.min.js"></script>
+</head>
+<body>
+    <div class="slides">
+
+        <!-- 1. タイトルスライド (title-slide) -->
+        <section class="slide title-slide">
+            <h1>全レイアウトサンプル</h1>
+            <p class="subtitle">スライドジェネレーター - 全15種類のレイアウト<br>2025年10月28日</p>
+        </section>
+
+        <!-- 2. 箇条書きスライド (デフォルト) -->
+        <section class="slide">
+            <h2>箇条書きスライド</h2>
+            <ul>
+                <li>クラス指定なしのデフォルトレイアウト</li>
+                <li>3〜5個の箇条書きに最適</li>
+                <li>主要なポイントの列挙</li>
+                <li>特徴やステップの説明に使用</li>
+            </ul>
+        </section>
+
+        <!-- 3. 2カラムスライド (two-column) -->
+        <section class="slide two-column">
+            <div class="column">
+                <h2>左カラム</h2>
+                <ul>
+                    <li>比較に最適</li>
+                    <li>Before/After</li>
+                    <li>メリット/デメリット</li>
+                </ul>
+            </div>
+            <div class="column">
+                <h2>右カラム</h2>
+                <ul>
+                    <li>2つの概念を並列表示</li>
+                    <li>製品AとBの比較</li>
+                    <li>対比説明</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 4. 画像中心スライド (image-center) -->
+        <section class="slide image-center">
+            <h2>画像中心スライド</h2>
+            <img src="https://via.placeholder.com/800x400/219ebc/ffffff?text=Sample+Image" alt="サンプル画像">
+            <p class="caption">製品画像やスクリーンショットの表示に最適</p>
+        </section>
+
+        <!-- 5. 引用スライド (quote-slide) -->
+        <section class="slide quote-slide">
+            <blockquote>
+                「デザインは、どう見えるか、どう感じるかということではない。どう機能するかだ。」
+            </blockquote>
+            <cite>— Steve Jobs</cite>
+        </section>
+
+        <!-- 6. セクション区切りスライド (section-slide) -->
+        <section class="slide section-slide">
+            <h2>第2章</h2>
+            <p>テーブルとコードのレイアウト</p>
+        </section>
+
+        <!-- 7. テーブルスライド (table-slide) -->
+        <section class="slide table-slide">
+            <h2>テーブルスライド</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>プラン</th>
+                        <th>ユーザー数</th>
+                        <th>ストレージ</th>
+                        <th>価格</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Free</td>
+                        <td>1名</td>
+                        <td>5GB</td>
+                        <td>無料</td>
+                    </tr>
+                    <tr>
+                        <td>Pro</td>
+                        <td>10名</td>
+                        <td>100GB</td>
+                        <td>¥1,000/月</td>
+                    </tr>
+                    <tr>
+                        <td>Enterprise</td>
+                        <td>無制限</td>
+                        <td>1TB</td>
+                        <td>¥10,000/月</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 8. コードスライド (code-slide) -->
+        <section class="slide code-slide">
+            <h2>コードスライド</h2>
+            <pre><code class="language-javascript">// シンタックスハイライト対応
+function generateSlide(content) {
+    const slide = document.createElement('section');
+    slide.className = 'slide';
+    slide.innerHTML = content;
+    return slide;
+}
+
+// 使用例
+const mySlide = generateSlide('&lt;h2&gt;タイトル&lt;/h2&gt;');
+document.body.appendChild(mySlide);
+</code></pre>
+        </section>
+
+        <!-- 9. グラフスライド (chart-slide) -->
+        <section class="slide chart-slide">
+            <h2>グラフスライド</h2>
+            <div class="chart-container">
+                <canvas id="singleChart"></canvas>
+            </div>
+        </section>
+
+        <!-- 10. 2つのグラフ並列 (dual-chart-slide) -->
+        <section class="slide dual-chart-slide">
+            <h2>2つのグラフ並列</h2>
+            <div class="chart-wrapper">
+                <h3>売上推移</h3>
+                <div class="chart-container">
+                    <canvas id="dualChart1"></canvas>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <h3>市場シェア</h3>
+                <div class="chart-container">
+                    <canvas id="dualChart2"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- 11. グラフ+テキスト並列 (chart-text-slide) -->
+        <section class="slide chart-text-slide">
+            <div class="chart-section">
+                <div class="chart-container">
+                    <canvas id="chartWithText"></canvas>
+                </div>
+            </div>
+            <div class="text-section">
+                <h2>主要な発見</h2>
+                <ul>
+                    <li>Q4に大幅な成長</li>
+                    <li>前年比150%増</li>
+                    <li>目標達成率120%</li>
+                </ul>
+                <p>この成長は新製品投入とマーケティング戦略の成果です。</p>
+            </div>
+        </section>
+
+        <!-- 12. 差分確認スライド (diff-slide) -->
+        <section class="slide diff-slide">
+            <h2>コードリファクタリング</h2>
+            <div class="diff-container">
+                <div class="diff-panel before">
+                    <h3>Before</h3>
+                    <div class="diff-content">
+                        <pre><code class="language-javascript">function getData() {
+  var result = [];
+  for (var i = 0; i &lt; data.length; i++) {
+    if (data[i].active == true) {
+      result.push(data[i]);
+    }
+  }
+  return result;
+}</code></pre>
+                    </div>
+                </div>
+                <div class="diff-panel after">
+                    <h3>After</h3>
+                    <div class="diff-content">
+                        <pre><code class="language-javascript">function getData() {
+  return data.filter(item => item.active);
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 13. ワンラインテキストオンリー (oneline-slide) -->
+        <section class="slide oneline-slide">
+            <h1>シンプルで強力なメッセージ</h1>
+        </section>
+
+        <!-- 14. フルサイズ画像背景 (full-image) -->
+        <section class="slide full-image" style="background-image: url('https://via.placeholder.com/1920x1080/023047/ffffff?text=Full+Background+Image');">
+            <div class="image-overlay">
+                <h1>フルサイズ画像背景</h1>
+                <p>背景画像の上にテキストを重ねて表示</p>
+            </div>
+        </section>
+
+        <!-- 15. 終了スライド (ending-slide) -->
+        <section class="slide ending-slide">
+            <h2>ありがとうございました</h2>
+            <p>ご質問・ご相談はお気軽にどうぞ</p>
+            <div class="contact-info">
+                <p>📧 contact@example.com</p>
+                <p>🌐 https://example.com</p>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Chart.js datalabelsプラグインをデフォルトで無効化
+        Chart.defaults.set('plugins.datalabels', {
+            display: false
+        });
+
+        // 共通オプション
+        const commonOptions = {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#023047',
+                        font: { size: 14 }
+                    }
+                },
+                datalabels: { display: false }
+            },
+            scales: {
+                y: {
+                    ticks: { color: '#023047' },
+                    grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                },
+                x: {
+                    ticks: { color: '#023047' },
+                    grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                }
+            }
+        };
+
+        // 9. 単一グラフ
+        new Chart(document.getElementById('singleChart'), {
+            type: 'line',
+            data: {
+                labels: ['1月', '2月', '3月', '4月', '5月', '6月'],
+                datasets: [{
+                    label: 'ユーザー数',
+                    data: [100, 150, 200, 280, 350, 420],
+                    borderColor: '#219ebc',
+                    backgroundColor: 'rgba(33, 158, 188, 0.2)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: commonOptions
+        });
+
+        // 10. デュアルグラフ1
+        new Chart(document.getElementById('dualChart1'), {
+            type: 'bar',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: '売上',
+                    data: [120, 150, 180, 220],
+                    backgroundColor: 'rgba(33, 158, 188, 0.7)'
+                }]
+            },
+            options: commonOptions
+        });
+
+        // 10. デュアルグラフ2
+        new Chart(document.getElementById('dualChart2'), {
+            type: 'pie',
+            data: {
+                labels: ['製品A', '製品B', '製品C'],
+                datasets: [{
+                    data: [40, 35, 25],
+                    backgroundColor: ['#219ebc', '#8ecae6', '#023047']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#023047',
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 11. グラフ+テキスト
+        new Chart(document.getElementById('chartWithText'), {
+            type: 'bar',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [{
+                    label: '成長率 (%)',
+                    data: [80, 95, 110, 150],
+                    backgroundColor: 'rgba(33, 158, 188, 0.7)'
+                }]
+            },
+            options: commonOptions
+        });
+    </script>
+
+    <script src="script.js"></script>
+</body>
+</html>

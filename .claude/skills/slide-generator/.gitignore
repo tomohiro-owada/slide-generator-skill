@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+
+# Temporary files
+*.tmp
+*~
+
+# Node.js
+node_modules/
+package-lock.json
+
+# Generated thumbnails
+thumbnails/
+
+# Vendor libraries (downloaded by generate-thumbnails.sh)
+resources/vendor/
+
+# Deploy directory (output for hosting)
+deploy/

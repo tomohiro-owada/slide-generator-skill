@@ -1,0 +1,20 @@
+<svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#FFD700;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#FFA500;stop-opacity:1" />
+        </linearGradient>
+    </defs>
+
+    <!-- 背景円 -->
+    <circle cx="75" cy="75" r="70" fill="url(#logoGradient)" />
+
+    <!-- スライドアイコン -->
+    <rect x="40" y="50" width="70" height="50" rx="5" fill="white" opacity="0.9"/>
+    <rect x="40" y="50" width="70" height="8" rx="5" fill="#667eea"/>
+
+    <!-- スライド線 -->
+    <line x1="50" y1="70" x2="90" y2="70" stroke="#667eea" stroke-width="3" stroke-linecap="round"/>
+    <line x1="50" y1="80" x2="100" y2="80" stroke="#667eea" stroke-width="3" stroke-linecap="round"/>
+    <line x1="50" y1="90" x2="80" y2="90" stroke="#667eea" stroke-width="3" stroke-linecap="round"/>
+</svg>

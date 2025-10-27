@@ -1,0 +1,24 @@
+{
+  "name": "slide-generator-skill",
+  "version": "1.0.0",
+  "description": "Claude Codeで使えるプレゼンテーションスライド生成スキルです。",
+  "main": "generate-thumbnails.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomohiro-owada/slide-generator-skill.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/tomohiro-owada/slide-generator-skill/issues"
+  },
+  "homepage": "https://github.com/tomohiro-owada/slide-generator-skill#readme",
+  "dependencies": {
+    "puppeteer": "^24.26.1"
+  }
+}

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{TITLE}}</title>
+    <link rel="stylesheet" href="resources/styles.css">
+</head>
+<body>
+    <div class="slides">
+        <!-- タイトルスライド -->
+        <section class="slide title-slide">
+            <div class="logo-container">
+                <img src="resources/logo.svg" alt="Logo" class="logo">
+            </div>
+            <h1>{{TITLE}}</h1>
+            <p class="subtitle">{{SUBTITLE}}</p>
+        </section>
+
+        <!-- コンテンツスライド（例） -->
+        <section class="slide">
+            <h2>{{SLIDE_TITLE}}</h2>
+            <ul>
+                <li>{{POINT_1}}</li>
+                <li>{{POINT_2}}</li>
+                <li>{{POINT_3}}</li>
+            </ul>
+        </section>
+    </div>
+
+    <script src="resources/script.js"></script>
+</body>
+</html>
