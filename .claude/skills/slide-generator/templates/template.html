@@ -2,31 +2,108 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
     <title>{{TITLE}}</title>
     <link rel="stylesheet" href="resources/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="slides">
-        <!-- タイトルスライド -->
-        <section class="slide title-slide">
-            <div class="logo-container">
-                <img src="resources/logo.svg" alt="Logo" class="logo">
-            </div>
+    <!-- タイトルスライド -->
+    <section class="slide title-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+
+        <div class="geometric-decoration bottom-right">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+
+        <div class="slide-content">
             <h1>{{TITLE}}</h1>
             <p class="subtitle">{{SUBTITLE}}</p>
-        </section>
+        </div>
+    </section>
 
-        <!-- コンテンツスライド（例） -->
-        <section class="slide">
+    <!-- 箇条書きスライド -->
+    <section class="slide bullet-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+
+        <div class="geometric-decoration bottom-right">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+
+        <div class="slide-content">
             <h2>{{SLIDE_TITLE}}</h2>
-            <ul>
+            <ul class="bullet-list">
                 <li>{{POINT_1}}</li>
                 <li>{{POINT_2}}</li>
                 <li>{{POINT_3}}</li>
             </ul>
-        </section>
-    </div>
+        </div>
+    </section>
+
+    <!-- 引用スライド -->
+    <section class="slide quote-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+
+        <div class="geometric-decoration bottom-right">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+
+        <div class="slide-content">
+            <blockquote class="quote">
+                {{QUOTE_TEXT}}
+            </blockquote>
+        </div>
+    </section>
+
+    <!-- エンディングスライド -->
+    <section class="slide credits-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+
+        <div class="geometric-decoration bottom-right">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+            <div class="shape shape-5"></div>
+        </div>
+
+        <div class="slide-content">
+            <h2>ありがとうございました</h2>
+            <p class="contact">{{CONTACT}}</p>
+        </div>
+    </section>
 
     <script src="resources/script.js"></script>
 </body>
