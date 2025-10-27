@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1920, initial-scale=1.0">
-    <title>Wolsey Design System - レイアウトパターン集</title>
+    <title>Wolsey Design System - 15レイアウトパターン完全版</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
@@ -26,7 +26,7 @@
         </div>
 
         <div class="slide-content">
-            <h1>これはあなたの<br>プレゼンテーションタイトル</h1>
+            <h1>Wolseyデザインシステム<br>15レイアウトパターン</h1>
         </div>
         <span class="page-number">1</span>
     </section>
@@ -48,7 +48,7 @@
 
         <div class="slide-content" style="display: flex;">
             <div class="column-left">
-                <h2>画像付きスライド</h2>
+                <h2>2カラムレイアウト</h2>
                 <p class="body-large">複雑なアイデアは、1枚の静止画像だけで伝えることができ、大量のデータを素早く吸収することが可能になります。</p>
                 <ul class="bullet-list">
                     <li>視覚的な要素が重要</li>
@@ -106,7 +106,7 @@
         </div>
 
         <div class="slide-content">
-            <h2>これはスライドタイトルです</h2>
+            <h2>箇条書きスライド</h2>
             <ul class="bullet-list">
                 <li>ここにアイテムのリストがあります</li>
                 <li>いくつかのテキスト</li>
@@ -137,18 +137,18 @@
         </div>
 
         <div class="slide-content">
-            <h2>2つまたは3つのカラムで</h2>
+            <h2>3カラムレイアウト</h2>
             <div class="columns">
                 <div class="column">
-                    <h4>Yellow</h4>
+                    <h4>機能1</h4>
                     <p>金、バター、熟したレモンの色です。可視光のスペクトルにおいて、黄色は緑とオレンジの間にあります。</p>
                 </div>
                 <div class="column">
-                    <h4>Blue</h4>
+                    <h4>機能2</h4>
                     <p>晴れた空と深海の色です。光学スペクトルでは紫と緑の間に位置しています。</p>
                 </div>
                 <div class="column">
-                    <h4>Red</h4>
+                    <h4>機能3</h4>
                     <p>血の色であり、このため歴史的に犠牲、危険、勇気と関連付けられてきました。</p>
                 </div>
             </div>
@@ -198,6 +198,236 @@
             </ul>
         </div>
         <span class="page-number">7</span>
+    </section>
+
+    <!-- 8. プロフィール/自己紹介スライド -->
+    <section class="slide profile-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <div class="geometric-decoration bottom-right">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+
+        <div class="slide-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" alt="Profile" class="profile-image">
+            <h3 class="accent-heading">山田太郎</h3>
+            <p class="profile-title">プロダクトマネージャー</p>
+            <p class="profile-bio">
+                テクノロジーとデザインの交差点で働くことに情熱を注いでいます。
+                ユーザー中心の製品開発を通じて、人々の生活を豊かにすることを目指しています。
+            </p>
+        </div>
+        <span class="page-number">8</span>
+    </section>
+
+    <!-- 9. セクション区切りスライド -->
+    <section class="slide section-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+        </div>
+
+        <div class="slide-content" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+            <h2>セクション2</h2>
+            <p>新しいトピックの始まり</p>
+        </div>
+        <span class="page-number">9</span>
+    </section>
+
+    <!-- 10. コード表示スライド -->
+    <section class="slide code-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <div class="geometric-decoration bottom-right">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <div class="slide-content">
+            <h2>コードスライド</h2>
+            <pre><code>function greet(name) {
+  return `Hello, ${name}!`;
+}
+
+// 使用例
+const message = greet('World');
+console.log(message); // "Hello, World!"
+
+// 複数の引数
+function add(a, b) {
+  return a + b;
+}</code></pre>
+        </div>
+        <span class="page-number">10</span>
+    </section>
+
+    <!-- 11. グラフ/チャートスライド -->
+    <section class="slide chart-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+        </div>
+
+        <div class="geometric-decoration bottom-right">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <div class="slide-content">
+            <h2>売上推移</h2>
+            <div class="chart-container">
+                <div style="text-align: center; padding: 100px 0; color: var(--cool-gray);">
+                    <p style="font-size: 24px;">[ Chart.js グラフをここに配置 ]</p>
+                    <p style="font-size: 16px; margin-top: 16px;">棒グラフ、折れ線グラフ、円グラフなど</p>
+                </div>
+            </div>
+        </div>
+        <span class="page-number">11</span>
+    </section>
+
+    <!-- 12. 2つのグラフ並列スライド -->
+    <section class="slide dual-chart-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+        </div>
+
+        <div class="geometric-decoration bottom-right">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+        </div>
+
+        <h2>比較分析</h2>
+        <div class="slide-content" style="display: flex;">
+            <div class="chart-wrapper">
+                <h3>製品A</h3>
+                <div class="chart-container">
+                    <div style="text-align: center; padding: 80px 20px; color: var(--cool-gray);">
+                        <p style="font-size: 20px;">グラフ1</p>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-wrapper">
+                <h3>製品B</h3>
+                <div class="chart-container">
+                    <div style="text-align: center; padding: 80px 20px; color: var(--cool-gray);">
+                        <p style="font-size: 20px;">グラフ2</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span class="page-number">12</span>
+    </section>
+
+    <!-- 13. グラフ+テキスト並列スライド -->
+    <section class="slide chart-text-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+        </div>
+
+        <div class="geometric-decoration bottom-right">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <div class="slide-content">
+            <div class="chart-section">
+                <div class="chart-container">
+                    <div style="text-align: center; padding: 100px 20px; color: var(--cool-gray);">
+                        <p style="font-size: 20px;">[ データビジュアライゼーション ]</p>
+                    </div>
+                </div>
+            </div>
+            <div class="text-section">
+                <h2>主要な洞察</h2>
+                <ul class="bullet-list">
+                    <li>売上が前年比30%増加</li>
+                    <li>新規顧客が2倍に成長</li>
+                    <li>顧客満足度が95%達成</li>
+                </ul>
+                <p style="margin-top: 24px;">
+                    これらの成果は、チーム全体の献身的な努力の結果です。
+                </p>
+            </div>
+        </div>
+        <span class="page-number">13</span>
+    </section>
+
+    <!-- 14. Before/After差分スライド -->
+    <section class="slide diff-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+        </div>
+
+        <h2>改善前後の比較</h2>
+        <div class="slide-content">
+            <div class="diff-container">
+                <div class="diff-panel before">
+                    <h3>改善前</h3>
+                    <div class="diff-content">
+                        <ul>
+                            <li>ページ読み込み時間: 5秒</li>
+                            <li>ユーザー満足度: 65%</li>
+                            <li>コンバージョン率: 2%</li>
+                            <li>バグ報告数: 月50件</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="diff-panel after">
+                    <h3>改善後</h3>
+                    <div class="diff-content">
+                        <ul>
+                            <li>ページ読み込み時間: 1.5秒</li>
+                            <li>ユーザー満足度: 92%</li>
+                            <li>コンバージョン率: 5.5%</li>
+                            <li>バグ報告数: 月10件</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span class="page-number">14</span>
+    </section>
+
+    <!-- 15. ワンライン強調メッセージスライド -->
+    <section class="slide oneline-slide">
+        <div class="geometric-decoration top-left">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <div class="geometric-decoration bottom-right">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <div class="slide-content">
+            <div class="message accent">
+                ありがとうございました！
+            </div>
+            <div class="submessage">
+                ご質問はありますか？
+            </div>
+        </div>
+        <span class="page-number">15</span>
     </section>
 
     <script src="script.js"></script>
