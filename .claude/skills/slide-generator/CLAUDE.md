@@ -896,3 +896,47 @@ else if (!inFrontmatter && frontmatterCount === 2) {
 - `.claude/skills/slide-generator/scripts/generate-slides.js` (splitSlides関数)
 - `.claude/skills/slide-generator/scripts/prepare-presentation.sh` (パス修正)
 </details>
+
+<details>
+<summary>oneline-slideの文字色修正 (2025-10-28)</summary>
+
+### 問題
+
+oneline-slideで白背景に薄いグレーの文字が表示され、テキストがほとんど見えない状態だった。
+
+**症状**:
+- 背景色: 白 `rgb(255, 255, 255)`
+- 文字色: 薄いグレー `rgb(149, 165, 166)`
+- スライド9が真っ白で何も見えない
+
+**原因**:
+CSSでは`.message`クラスに青色を設定していたが、実際のHTMLは`<h1>`タグで生成されていたため、デフォルトのグレー色が適用されていた。
+
+### 修正
+
+oneline-slideの見出しタグ（h1, h2, h3）に直接スタイルを適用：
+
+```css
+.slide.oneline-slide h1,
+.slide.oneline-slide h2,
+.slide.oneline-slide h3 {
+  color: var(--ocean-blue);
+  font-weight: 900;
+  line-height: 1.3;
+}
+
+.slide.oneline-slide h1 { font-size: 96px; }
+.slide.oneline-slide h2 { font-size: 72px; }
+.slide.oneline-slide h3 { font-size: 60px; }
+```
+
+### 検証結果
+
+**修正後**:
+- 文字色: 青 `rgb(52, 152, 219)` (Ocean Blue)
+- フォントサイズ: h1=96px, h2=72px, h3=60px
+- テキストが明確に読める
+
+**ファイル**:
+- `.claude/skills/slide-generator/resources/styles.css` (oneline-slideスタイル)
+</details>
