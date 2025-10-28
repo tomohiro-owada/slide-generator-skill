@@ -940,3 +940,36 @@ oneline-slideの見出しタグ（h1, h2, h3）に直接スタイルを適用：
 **ファイル**:
 - `.claude/skills/slide-generator/resources/styles.css` (oneline-slideスタイル)
 </details>
+
+<details>
+<summary>title-slideとcode-slideの改善 (2025-10-28)</summary>
+
+### 問題1: title-slideのサブタイトルが見えない
+
+**症状**:
+- 背景: 青のグラデーション
+- h1（タイトル）: 白 ✅
+- h2（サブタイトル）: 青（背景と同じ色） ❌
+
+**修正**:
+```css
+.slide.title-slide h1 {
+  color: var(--pure-white);
+}
+
+.slide.title-slide h2 {
+  color: var(--pure-white);
+  opacity: 0.95;
+}
+```
+
+### 問題2: code-slideのコードブロックが狭い
+
+**修正前**: width: 90%, max-width: 1100px
+**修正後**: width: 95%, max-width: 1400px
+
+**効果**: コードの可読性が向上し、より多くのコードを横に配置可能
+
+**ファイル**:
+- `.claude/skills/slide-generator/resources/styles.css` (title-slide, code-slide)
+</details>
