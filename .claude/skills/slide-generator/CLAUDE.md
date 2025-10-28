@@ -973,3 +973,38 @@ oneline-slideの見出しタグ（h1, h2, h3）に直接スタイルを適用：
 **ファイル**:
 - `.claude/skills/slide-generator/resources/styles.css` (title-slide, code-slide)
 </details>
+
+<details>
+<summary>code-slideの真の原因を修正 (2025-10-28)</summary>
+
+### 問題
+
+code-slideのpre要素の幅を98%に設定したが、実際には40%しか表示されていなかった。
+
+**根本原因**: `.slide-content`の`max-width: 1200px`が親要素として幅を制限していた
+
+### 修正
+
+```css
+/* 修正前 */
+.slide.code-slide .slide-content {
+  max-width: 1200px;
+}
+
+/* 修正後 */
+.slide.code-slide .slide-content {
+  width: 100%;
+}
+```
+
+### 検証結果
+
+- 修正前: 実際の幅 614px (40%)
+- 修正後: 実際の幅 1331px (88%)
+- ビューポート: 1518px
+
+**効果**: コードブロックが画面いっぱいに表示され、大幅に可読性が向上
+
+**ファイル**:
+- `.claude/skills/slide-generator/resources/styles.css` (code-slide .slide-content)
+</details>
