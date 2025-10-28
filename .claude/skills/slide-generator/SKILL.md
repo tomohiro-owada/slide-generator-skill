@@ -8,11 +8,12 @@
 
 1. ユーザーがスライドにしたい内容（テキスト、データ、コードなど）を提供
 2. Claude Codeが自動的に内容を分析・最適なレイアウトを選択・分割
-3. HTMLファイルを生成して保存
-4. ユーザーが `./generate-thumbnails.sh` を実行してサムネイル生成
-5. ブラウザで開いて完成！
+3. Markdownファイルを作成
+4. `generate-slides.js`でHTMLに変換
+5. `prepare-presentation.sh`でデプロイ（サムネイル自動生成含む）
+6. Chrome DevTools MCPまたはブラウザで確認して完成！
 
-**重要**: 生成後は必ず `./generate-thumbnails.sh` を実行してください。プログレスバーのサムネイルプレビュー機能が使えるようになります。
+**重要**: スタイルを修正した場合は`prepare-presentation.sh`を再実行してください。
 
 ## リソースファイル
 
@@ -33,6 +34,46 @@
 
 ### 5. 内容テンプレート
 `resources/content-template.md` - スライド内容を記述するためのMarkdownテンプレート
+
+## ⚠️ 重要な注意事項（必読）
+
+### 正しいビルドワークフロー
+
+**必ずこの順序で実行すること**:
+
+```bash
+# 1. Markdownからスライド生成
+node .claude/skills/slide-generator/scripts/generate-slides.js input.md output.html
+
+# 2. プレゼンテーション準備（サムネイル生成含む）
+bash .claude/skills/slide-generator/scripts/prepare-presentation.sh output.html slide-name
+
+# 3. ブラウザで確認
+open .claude/skills/slide-generator/deploy/slide-name/index.html
+```
+
+**重要**:
+- プロジェクトルートから実行する
+- prepare-presentation.shがリソースをdeploy/にコピーし、パスを置換する
+- スタイル修正後は必ずprepare-presentation.shを再実行
+
+### スタイル修正時の注意
+
+`resources/styles.css`を修正した場合：
+1. 修正を保存
+2. **必ず**`prepare-presentation.sh`を再実行してdeployディレクトリに反映
+3. ブラウザで確認する際は強制リロード（Cmd+Shift+R）
+
+### 検証方法
+
+**Chrome DevTools MCPを使用**:
+- スライド表示の確認
+- 実際の幅・色の測定
+- CSSの適用状況確認
+
+**よくある問題**:
+- ブラウザキャッシュでスタイル変更が反映されない → 強制リロード
+- パスエラー → プロジェクトルートから実行しているか確認
 
 ## ワークフロー
 
@@ -67,17 +108,27 @@
    - 終了スライドを最後に追加
    - 全体の流れを確認
 
-5. **ファイル生成**:
-   - HTMLファイルを生成して保存（プロジェクトルートに `presentation.html` など）
-   - 必要なリソースは相対パスで参照（自動設定済み）
-   - Chart.js、Prism.jsは `slide-generator/resources/vendor/` から読み込み
+5. **スライド生成とデプロイ**:
+   ```bash
+   # Markdownからスライド生成
+   node .claude/skills/slide-generator/scripts/generate-slides.js presentation.md presentation.html
 
-6. **サムネイル生成指示**:
-   - ユーザーに `./generate-thumbnails.sh` の実行を促す
-   - このスクリプトが自動的に：
-     - 必要なライブラリ（Chart.js、Prism.jsなど）をダウンロード
-     - Puppeteerをインストール
-     - 各スライドのサムネイルを生成
+   # プレゼンテーション準備（サムネイル生成含む）
+   bash .claude/skills/slide-generator/scripts/prepare-presentation.sh presentation.html my-presentation
+   ```
+
+   これで以下が自動実行される：
+   - HTMLファイルの生成
+   - deploy/my-presentation/にコピー
+   - リソース（CSS、JS）のコピーとパス置換
+   - Puppeteerによるサムネイル自動生成
+
+6. **確認**:
+   ```bash
+   open .claude/skills/slide-generator/deploy/my-presentation/index.html
+   ```
+
+   またはChrome DevTools MCPで確認
 
 **分割の目安:**
 - 箇条書き: 5項目以上 → 複数スライドに分割
@@ -382,65 +433,47 @@ Before/After比較やコード差分を左右に並べて表示。
 - クリックすると該当スライドに移動
 - ホバーするとサムネイルプレビューを表示
 
-## サムネイル生成（重要）
+## サムネイル生成（自動）
 
-**スライド生成後、必ずこのステップを実行してください！**
+**prepare-presentation.shが自動的に実行します**
 
-プログレスバーのサムネイルプレビュー機能を使用するには、サムネイル画像の生成が必要です。
+サムネイル生成は`prepare-presentation.sh`スクリプト内で自動的に行われます。
 
-### 実行方法（超簡単）
+### 実行内容
 
-プロジェクトのルートディレクトリで以下のコマンドを実行するだけ：
-```bash
-./generate-thumbnails.sh
-```
-
-**たったこれだけで完了します！** スクリプトが自動的に：
-1. Node.jsのチェック（未インストールの場合は指示を表示）
-2. Puppeteerの自動インストール（初回のみ）
-3. **Chart.js、Prism.js等の必要なライブラリを自動ダウンロード**
-4. ヘッドレスChromeでHTMLを開く
-5. 全スライドのスクリーンショットを撮影
-6. `.thumbnails/` ディレクトリに保存
-
-### 前提条件
-
-Node.jsのみ必要です：
-```bash
-# macOSの場合
-brew install node
-```
+`prepare-presentation.sh`実行時に自動的に：
+1. Puppeteerの自動インストール（初回のみ）
+2. リソースファイルのコピー
+3. 各スライドのスクリーンショット撮影
+4. `deploy/slide-name/thumbnails/index/`に保存
 
 ### 生成されるファイル
 
 ```
-.thumbnails/
-├── presentation-name/
-│   ├── slide-0.png
-│   ├── slide-1.png
-│   └── ...
-
-slide-generator/resources/vendor/  # 自動ダウンロードされる
-├── chart.min.js
-├── chartjs-plugin-datalabels.min.js
-├── prism.js
-├── prism.css
-└── prism-javascript.min.js
+.claude/skills/slide-generator/deploy/
+└── slide-name/
+    ├── index.html
+    ├── thumbnails/
+    │   └── index/
+    │       ├── slide-0.png
+    │       ├── slide-1.png
+    │       └── ...
+    └── resources/  # 自動コピーされる
+        ├── styles.css
+        ├── script.js
+        └── vendor/
 ```
 
 ### 再生成が必要なタイミング
 
-以下の場合はサムネイルを再生成してください：
+以下の場合はprepare-presentation.shを再実行：
 - スライドの内容を変更した後
 - 新しいスライドを追加・削除した後
 - レイアウトやスタイルを変更した後
 
-**再度実行するだけでOK**: `./generate-thumbnails.sh`
-
-**注意**:
-- `.thumbnails/` と `vendor/` ディレクトリは `.gitignore` に含まれています
-- Gitにコミットされないため、各環境で生成が必要です
-- ライブラリは既にダウンロード済みの場合はスキップされます（高速）
+```bash
+bash .claude/skills/slide-generator/scripts/prepare-presentation.sh output.html slide-name
+```
 
 ## スライド生成の例
 
@@ -449,37 +482,60 @@ slide-generator/resources/vendor/  # 自動ダウンロードされる
 **ユーザー**: 「このテキストでスライド作って」+ 長文テキスト
 
 **Claude Code**:
-1. テキストを分析してトピック分け
-2. 自動的にレイアウトを選択・分割
-3. `presentation.html` を生成
-4. 「`./generate-thumbnails.sh` を実行してください」と指示
-
-**ユーザー**: `./generate-thumbnails.sh` を実行 → 完成！
+1. Markdownファイルを作成（presentation.md）
+2. generate-slides.jsでHTMLに変換
+3. prepare-presentation.shでデプロイ準備
+4. Chrome DevTools MCPまたはブラウザで確認
 
 ### 例2: データでグラフスライドを作成
 
 **ユーザー**: 「2023年の売上データ: Q1=100万, Q2=150万, Q3=120万, Q4=180万」
 
 **Claude Code**:
-1. 数値データを検出
-2. Chart.jsで棒グラフを生成
-3. グラフスライドとして自動レイアウト
-4. HTMLを生成・保存
-
-**ユーザー**: `./generate-thumbnails.sh` を実行 → 完成！
+1. Chart.js形式のデータを埋め込んだMarkdownを作成
+2. generate-slides.jsでHTMLに変換
+3. prepare-presentation.shでデプロイ準備
+4. グラフが正しく表示されるか確認
 
 ### 例3: コードを含むスライド
 
 **ユーザー**: 「このコードを説明するスライド作って」+ コードブロック
 
 **Claude Code**:
-1. コードを検出してシンタックスハイライト対応
-2. コードスライドレイアウトを使用
-3. 説明文を追加して自動構成
-4. HTMLを生成・保存
-
-**ユーザー**: `./generate-thumbnails.sh` を実行 → 完成！
+1. コードブロックを含むMarkdownを作成
+2. generate-slides.jsでシンタックスハイライト対応HTMLに変換
+3. prepare-presentation.shでデプロイ準備
+4. コードが正しく表示されるか確認
 
 ---
 
-**重要**: 生成されたHTMLファイルは、必ず `./generate-thumbnails.sh` を実行してからブラウザで開いてください。サムネイルプレビュー機能が使えるようになります。
+## トラブルシューティング
+
+### スタイルが反映されない
+
+**症状**: CSSを修正したが見た目が変わらない
+
+**解決方法**:
+1. prepare-presentation.shを再実行（deployディレクトリに反映）
+2. ブラウザで強制リロード（Cmd+Shift+R）
+3. Chrome DevTools MCPでCSSの読み込み状況を確認
+
+### スライドが空になる
+
+**症状**: 特定のスライドの内容が表示されない
+
+**原因**: generate-slides.jsのfrontmatter分割ロジックの問題
+
+**確認方法**: Markdownファイルの`---`の使い方を確認
+- frontmatter: `---\nlayout: xxx\n---\n`
+- スライド区切り: `---\n`（frontmatter後の最初の`---`は次のスライドの開始）
+
+### パスエラー
+
+**症状**: ファイルが見つからないエラー
+
+**解決方法**: プロジェクトルートから実行しているか確認
+```bash
+pwd  # 現在地確認
+# /Users/.../claude-slide-template であるべき
+```
