@@ -1,6 +1,7 @@
 // スライド操作
 let currentSlide = 0;
 const slides = document.querySelectorAll('.slide');
+let thumbnailView = null;
 
 function showSlide(n) {
     slides.forEach((slide, index) => {
@@ -9,6 +10,24 @@ function showSlide(n) {
 }
 
 document.addEventListener('keydown', (e) => {
+    // サムネイル一覧が開いている場合、Escapeで閉じる
+    if (e.key === 'Escape' && thumbnailView && thumbnailView.classList.contains('active')) {
+        closeThumbnailView();
+        return;
+    }
+
+    // Gキーでサムネイル一覧をトグル
+    if (e.key === 'g' || e.key === 'G') {
+        e.preventDefault();
+        toggleThumbnailView();
+        return;
+    }
+
+    // サムネイル一覧が開いている場合は、スライド操作をスキップ
+    if (thumbnailView && thumbnailView.classList.contains('active')) {
+        return;
+    }
+
     if (e.key === 'ArrowRight' && currentSlide < slides.length - 1) {
         currentSlide++;
         showSlide(currentSlide);
@@ -34,8 +53,8 @@ document.addEventListener('keydown', (e) => {
 
 // クリックで次のスライドへ
 document.addEventListener('click', (e) => {
-    // プログレスバーやボタンなど特定の要素をクリックした場合は除外
-    if (!e.target.closest('.progress-bar')) {
+    // プログレスバーやサムネイル一覧など特定の要素をクリックした場合は除外
+    if (!e.target.closest('.progress-bar') && !e.target.closest('.thumbnail-view')) {
         if (currentSlide < slides.length - 1) {
             currentSlide++;
             showSlide(currentSlide);
@@ -136,6 +155,105 @@ document.body.appendChild(pageNumber);
 
 function updatePageNumber() {
     pageNumber.textContent = `${currentSlide + 1} / ${slides.length}`;
+}
+
+// サムネイル一覧表示機能
+function createThumbnailView() {
+    const view = document.createElement('div');
+    view.className = 'thumbnail-view';
+
+    const header = document.createElement('div');
+    header.className = 'thumbnail-header';
+    header.innerHTML = `
+        <h3>スライド一覧 (${slides.length}枚)</h3>
+        <div class="thumbnail-close">閉じる (Esc / G)</div>
+    `;
+
+    const grid = document.createElement('div');
+    grid.className = 'thumbnail-grid';
+
+    slides.forEach((slide, index) => {
+        const item = document.createElement('div');
+        item.className = 'thumbnail-item';
+        if (index === currentSlide) {
+            item.classList.add('current');
+        }
+
+        const preview = document.createElement('div');
+        preview.className = 'thumbnail-preview';
+
+        // サムネイル画像を使用（事前生成されたもの）
+        const thumbnailPath = getThumbnailPath(index);
+        const img = document.createElement('img');
+        img.src = thumbnailPath;
+        img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+        img.onerror = () => {
+            // サムネイルが見つからない場合は、スライドのクローンを使用
+            const clonedSlide = slide.cloneNode(true);
+            clonedSlide.style.display = 'flex';
+            preview.appendChild(clonedSlide);
+        };
+        preview.appendChild(img);
+
+        const info = document.createElement('div');
+        info.className = 'thumbnail-info';
+        const slideTitle = slide.querySelector('h1, h2')?.textContent || `スライド ${index + 1}`;
+        info.innerHTML = `
+            <div class="thumbnail-number">${index + 1} / ${slides.length}</div>
+            <div class="thumbnail-title">${slideTitle}</div>
+        `;
+
+        item.appendChild(preview);
+        item.appendChild(info);
+
+        item.addEventListener('click', () => {
+            currentSlide = index;
+            showSlide(currentSlide);
+            updatePageNumber();
+            updateProgressBar();
+            closeThumbnailView();
+        });
+
+        grid.appendChild(item);
+    });
+
+    view.appendChild(header);
+    view.appendChild(grid);
+    document.body.appendChild(view);
+
+    header.querySelector('.thumbnail-close').addEventListener('click', closeThumbnailView);
+
+    return view;
+}
+
+function openThumbnailView() {
+    if (!thumbnailView) {
+        thumbnailView = createThumbnailView();
+    } else {
+        // 現在のスライドを更新
+        document.querySelectorAll('.thumbnail-item').forEach((item, index) => {
+            if (index === currentSlide) {
+                item.classList.add('current');
+            } else {
+                item.classList.remove('current');
+            }
+        });
+    }
+    thumbnailView.classList.add('active');
+}
+
+function closeThumbnailView() {
+    if (thumbnailView) {
+        thumbnailView.classList.remove('active');
+    }
+}
+
+function toggleThumbnailView() {
+    if (thumbnailView && thumbnailView.classList.contains('active')) {
+        closeThumbnailView();
+    } else {
+        openThumbnailView();
+    }
 }
 
 // 初期化

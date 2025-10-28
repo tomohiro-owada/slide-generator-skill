@@ -1,133 +1,141 @@
 #!/bin/bash
 
-# 色付きログ用の定義
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+# prepare-presentation.sh
+# スライド生成後のデプロイ準備を自動化するスクリプト
+#
+# 使用方法:
+#   bash .claude/skills/slide-generator/scripts/prepare-presentation.sh <html-file> <project-name>
+#
+# 例:
+#   bash .claude/skills/slide-generator/scripts/prepare-presentation.sh climate-tech.html climate-tech
+#
+# 実行内容:
+#   1. サムネイル生成（Puppeteer）
+#   2. デプロイディレクトリ作成
+#   3. HTMLとサムネイルをコピー
+#   4. リソースファイルをコピー
 
-# 使い方を表示
-usage() {
-    echo "使い方: $0 <HTMLファイル> <スライド名>"
-    echo ""
-    echo "例: $0 sample-presentation.html my-presentation"
-    echo "    → deploy/my-presentation/ に出力"
-    echo ""
-    echo "複数のスライドを追加:"
-    echo "    $0 slide1.html project-a"
-    echo "    $0 slide2.html project-b"
-    echo "    → deploy/ 以下に複数のスライドを配置"
-    echo ""
-    exit 1
-}
+set -e
 
 # 引数チェック
 if [ $# -ne 2 ]; then
-    echo -e "${RED}エラー: 引数が不足しています${NC}"
-    usage
-fi
-
-HTML_FILE=$1
-SLIDE_NAME=$2
-
-# HTMLファイルの存在チェック
-if [ ! -f "$HTML_FILE" ]; then
-    echo -e "${RED}エラー: HTMLファイルが見つかりません: $HTML_FILE${NC}"
+    echo "使用方法: bash prepare-presentation.sh <html-file> <project-name>"
+    echo "例: bash prepare-presentation.sh climate-tech.html climate-tech"
     exit 1
 fi
 
-# HTMLファイル名（拡張子なし）を取得
-HTML_BASENAME=$(basename "$HTML_FILE" .html)
+HTML_FILE="$1"
+PROJECT_NAME="$2"
 
-# 出力先ディレクトリ
-DEPLOY_DIR=".claude/skills/slide-generator/deploy"
-SLIDE_DIR="$DEPLOY_DIR/$SLIDE_NAME"
+# プロジェクトルートを取得（このスクリプトから相対）
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
+SKILL_DIR="$PROJECT_ROOT/.claude/skills/slide-generator"
 
-echo -e "${BLUE}📦 プレゼンテーション準備ツール${NC}"
+echo "=========================================="
+echo "スライドデプロイ準備"
+echo "=========================================="
+echo "HTMLファイル: $HTML_FILE"
+echo "プロジェクト名: $PROJECT_NAME"
+echo "プロジェクトルート: $PROJECT_ROOT"
+echo "=========================================="
+
+# HTMLファイルの存在確認
+if [ ! -f "$PROJECT_ROOT/$HTML_FILE" ]; then
+    echo "エラー: HTMLファイルが見つかりません: $PROJECT_ROOT/$HTML_FILE"
+    exit 1
+fi
+
+# ステップ1: サムネイル生成
 echo ""
-echo -e "HTMLファイル: ${GREEN}$HTML_FILE${NC}"
-echo -e "スライド名: ${GREEN}$SLIDE_NAME${NC}"
-echo -e "出力先: ${GREEN}$SLIDE_DIR${NC}"
-echo ""
+echo "ステップ1: サムネイル生成"
+echo "----------------------------------------"
+cd "$PROJECT_ROOT"
+node "$SKILL_DIR/scripts/generate-thumbnails.js" "$HTML_FILE"
 
-# deployディレクトリを作成
+# ステップ2: デプロイディレクトリ作成
+echo ""
+echo "ステップ2: デプロイディレクトリ作成"
+echo "----------------------------------------"
+DEPLOY_ROOT="$SKILL_DIR/deploy/abalol"
+DEPLOY_DIR="$DEPLOY_ROOT/$PROJECT_NAME"
 mkdir -p "$DEPLOY_DIR"
+echo "作成: $DEPLOY_DIR"
 
-# resources を deploy 直下にコピー（毎回更新）
-echo -e "${YELLOW}📚 共通リソースを更新しています...${NC}"
-RESOURCES_DIR=".claude/skills/slide-generator/resources"
-if [ -d "$RESOURCES_DIR" ]; then
-    cp -r "$RESOURCES_DIR" "$DEPLOY_DIR/"
-    echo -e "${GREEN}  ✓ resources をコピーしました${NC}"
-else
-    echo -e "${RED}  ✗ resources が見つかりません: $RESOURCES_DIR${NC}"
-    exit 1
+# 共通リソースをルートにコピー（初回のみ）
+if [ ! -d "$DEPLOY_ROOT/resources" ]; then
+    cp -r "$SKILL_DIR/resources" "$DEPLOY_ROOT/resources"
+    echo "共通リソースをコピー: $DEPLOY_ROOT/resources"
 fi
 
-# スライドディレクトリを作成
-echo -e "${YELLOW}📁 スライドディレクトリを作成しています...${NC}"
-mkdir -p "$SLIDE_DIR"
-
-# HTMLファイルをコピーしてindex.htmlにリネーム
-echo -e "${YELLOW}📄 HTMLファイルをコピーしています...${NC}"
-cp "$HTML_FILE" "$SLIDE_DIR/index.html"
-
-# HTMLファイル内のパスを相対パスに修正
-echo -e "${YELLOW}🔧 パスを調整しています...${NC}"
-sed -i.bak 's|\./\.claude/skills/slide-generator/resources/|../resources/|g' "$SLIDE_DIR/index.html"
-sed -i.bak 's|\.claude/skills/slide-generator/resources/|../resources/|g' "$SLIDE_DIR/index.html"
-rm "$SLIDE_DIR/index.html.bak"
-echo -e "${GREEN}  ✓ パスを相対パスに変更しました${NC}"
-
-# サムネイルを生成
+# ステップ3: HTMLをコピー
 echo ""
-echo -e "${YELLOW}📸 サムネイルを生成しています...${NC}"
+echo "ステップ3: HTMLファイルをコピー"
+echo "----------------------------------------"
+cp "$PROJECT_ROOT/$HTML_FILE" "$DEPLOY_DIR/index.html"
+echo "コピー: $HTML_FILE → $DEPLOY_DIR/index.html"
 
-# node_modulesが存在しない場合はインストール
-if [ ! -d ".claude/skills/slide-generator/node_modules/puppeteer" ]; then
-    echo -e "${YELLOW}📥 Puppeteerをインストールしています...${NC}"
-    cd .claude/skills/slide-generator
-    npm install --silent puppeteer
-    cd - > /dev/null
-fi
-
-# generate-thumbnails.jsが存在するか確認
-THUMBNAILS_SCRIPT=".claude/skills/slide-generator/scripts/generate-thumbnails.js"
-if [ ! -f "$THUMBNAILS_SCRIPT" ]; then
-    echo -e "${RED}エラー: $THUMBNAILS_SCRIPT が見つかりません${NC}"
-    exit 1
-fi
-
-# サムネイルを生成
-# 絶対パスを取得
-THUMBNAILS_SCRIPT_ABS=$(cd "$(dirname "$THUMBNAILS_SCRIPT")" && pwd)/$(basename "$THUMBNAILS_SCRIPT")
-SLIDE_DIR_ABS=$(cd "$SLIDE_DIR" && pwd)
-
-# サムネイル生成スクリプトを実行
-node "$THUMBNAILS_SCRIPT_ABS" "$SLIDE_DIR_ABS/index.html"
-
-# サムネイルが生成されたか確認
-if [ -d "$SLIDE_DIR/thumbnails/index" ]; then
-    echo -e "${GREEN}  ✓ サムネイルを生成しました${NC}"
+# ステップ4: サムネイルをコピー
+echo ""
+echo "ステップ4: サムネイルをコピー"
+echo "----------------------------------------"
+THUMBNAIL_SOURCE="$PROJECT_ROOT/thumbnails/$(basename $HTML_FILE .html)"
+if [ -d "$THUMBNAIL_SOURCE" ]; then
+    cp -r "$THUMBNAIL_SOURCE" "$DEPLOY_DIR/thumbnails"
+    echo "コピー: $THUMBNAIL_SOURCE → $DEPLOY_DIR/thumbnails"
 else
-    echo -e "${YELLOW}  ⚠ サムネイルの生成をスキップしました${NC}"
+    echo "警告: サムネイルディレクトリが見つかりません: $THUMBNAIL_SOURCE"
+fi
+
+# ステップ5: リソースファイルをコピー
+echo ""
+echo "ステップ5: リソースファイルをコピー"
+echo "----------------------------------------"
+# プロジェクトディレクトリにリソースをコピー
+cp -r "$SKILL_DIR/resources" "$DEPLOY_DIR/resources"
+echo "コピー: resources → $DEPLOY_DIR/resources"
+
+# インデックスページを作成（初回のみ）
+if [ ! -f "$DEPLOY_ROOT/index.html" ]; then
+    cat > "$DEPLOY_ROOT/index.html" << 'EOF'
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentations</title>
+    <link rel="stylesheet" href="resources/styles.css">
+</head>
+<body style="padding: 40px; max-width: 800px; margin: 0 auto;">
+    <h1>プレゼンテーション一覧</h1>
+    <ul id="project-list"></ul>
+    <script>
+        // プロジェクトディレクトリを自動検出して表示
+        const projects = [];
+        document.getElementById('project-list').innerHTML = projects.length === 0
+            ? '<li>プロジェクトがまだありません</li>'
+            : projects.map(p => `<li><a href="${p}/">${p}</a></li>`).join('');
+    </script>
+</body>
+</html>
+EOF
+    echo "インデックスページを作成: $DEPLOY_ROOT/index.html"
 fi
 
 # 完了メッセージ
 echo ""
-echo -e "${GREEN}✨ 準備完了！${NC}"
-echo ""
-echo -e "スライドの場所: ${BLUE}$SLIDE_DIR${NC}"
+echo "=========================================="
+echo "デプロイ準備が完了しました！"
+echo "=========================================="
 echo ""
 echo "次のステップ:"
-echo "  1. ブラウザで確認:"
-echo -e "     ${BLUE}open $SLIDE_DIR/index.html${NC}"
+echo "  1. ローカルで確認:"
+echo "     open $DEPLOY_DIR/index.html"
 echo ""
-echo "  2. 他のスライドを追加:"
-echo -e "     ${BLUE}./prepare-presentation.sh another.html another-name${NC}"
+echo "  2. Surgeにデプロイ:"
+echo "     cd $DEPLOY_ROOT"
+echo "     surge . abalol.surge.sh"
 echo ""
-echo "  3. デプロイ:"
-echo -e "     ${BLUE}cd deploy && surge${NC}"
-echo -e "     または: ${BLUE}cd deploy && netlify deploy --prod${NC}"
-echo ""
+echo "  3. ブラウザで確認:"
+echo "     open https://abalol.surge.sh/$PROJECT_NAME/"
+echo "=========================================="

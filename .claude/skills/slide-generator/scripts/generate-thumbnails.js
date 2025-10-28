@@ -7,7 +7,13 @@ const fs = require('fs');
 async function generateThumbnails(htmlFile) {
     const browser = await puppeteer.launch({
         headless: 'new',
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox',
+            '--disable-dev-shm-usage',
+            '--disable-accelerated-2d-canvas',
+            '--disable-gpu'
+        ]
     });
 
     const page = await browser.newPage();
@@ -22,12 +28,33 @@ async function generateThumbnails(htmlFile) {
     // HTMLファイルを開く
     const filePath = path.resolve(htmlFile);
     await page.goto(`file://${filePath}`, {
-        waitUntil: 'domcontentloaded',
+        waitUntil: 'networkidle0',  // すべてのネットワークリクエストが完了するまで待つ
         timeout: 60000
     });
 
-    // 追加で少し待つ（Chart.jsなどの初期化を待つ）
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // CSSとJavaScriptの完全なロードとレンダリングを待つ
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    // CSSが正しく読み込まれているか確認
+    const cssLoaded = await page.evaluate(() => {
+        const titleSlide = document.querySelector('.title-slide');
+        if (titleSlide) {
+            const styles = window.getComputedStyle(titleSlide);
+            const linkTags = Array.from(document.querySelectorAll('link[rel="stylesheet"]'));
+            return {
+                backgroundColor: styles.backgroundColor,
+                background: styles.background,
+                display: styles.display,
+                hasGeometricDecoration: !!document.querySelector('.geometric-decoration'),
+                stylesheets: linkTags.map(link => ({ href: link.href, loaded: link.sheet !== null }))
+            };
+        }
+        return null;
+    });
+
+    if (cssLoaded) {
+        console.log('  CSS読み込み状況:', JSON.stringify(cssLoaded, null, 2));
+    }
 
     // スライド数を取得
     const slideCount = await page.evaluate(() => {
@@ -54,8 +81,8 @@ async function generateThumbnails(htmlFile) {
             });
         }, i);
 
-        // 少し待つ（グラフなどのレンダリングを待つ）
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // グラフやCSSアニメーションのレンダリングを待つ
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         // スクリーンショット撮影
         const screenshotPath = path.join(thumbnailDir, `slide-${i}.png`);

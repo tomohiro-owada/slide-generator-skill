@@ -14,6 +14,7 @@
   --pure-white: #FFFFFF;
   --light-gray: #7F8C8D;
   --cool-gray: #95A5A6;
+  --text-dark: #2C3E50;
 
   /* Background Variants */
   --sunset-orange: #E59866;
@@ -255,6 +256,12 @@ p {
   color: var(--pure-white);
   opacity: 0.95;
   margin-top: var(--spacing-lg);
+}
+
+.slide.title-slide h3 {
+  color: var(--pure-white);
+  opacity: 0.9;
+  margin-top: var(--spacing-md);
 }
 
 .slide.title-slide .subtitle {
@@ -854,6 +861,7 @@ p {
 /* 11. Code Slide */
 .slide.code-slide {
   background: var(--pure-white);
+  color: var(--text-dark);
 }
 
 .slide.code-slide .slide-content {
@@ -893,6 +901,7 @@ p {
 /* 12. Table Slide */
 .slide.table-slide {
   background: var(--pure-white);
+  color: var(--text-dark);
 }
 
 .slide.table-slide .slide-content {
@@ -935,6 +944,7 @@ p {
 /* 13. Diff/Comparison Slide */
 .slide.diff-slide {
   background: var(--pure-white);
+  color: var(--text-dark);
 }
 
 .slide.diff-slide .slide-content {
@@ -1123,6 +1133,7 @@ p {
 /* 15. Image Center Slide */
 .slide.image-center {
   background: var(--pure-white);
+  color: var(--text-dark);
 }
 
 .slide.image-center .slide-content {
@@ -1158,6 +1169,7 @@ p {
 /* 16. Profile Slide */
 .slide.profile-slide {
   background: var(--pure-white);
+  color: var(--text-dark);
 }
 
 .slide.profile-slide .slide-content {

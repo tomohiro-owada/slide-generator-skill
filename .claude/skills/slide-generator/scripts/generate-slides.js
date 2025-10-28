@@ -32,39 +32,46 @@ if (!fs.existsSync(inputFile)) {
 // Markdownファイルを読み込む
 const markdown = fs.readFileSync(inputFile, 'utf-8');
 
-// Markdownをスライドに分割（frontmatterを考慮）
+// Markdownをスライドに分割
+// frontmatter形式（--- layout: xxx ---）と通常の---区切りの両方に対応
 function splitSlides(text) {
   const blocks = [];
   const lines = text.split('\n');
   let currentBlock = [];
   let inFrontmatter = false;
-  let frontmatterCount = 0;
+  let hasFrontmatter = false;
 
-  for (const line of lines) {
-    if (line === '---') {
-      if (!inFrontmatter && frontmatterCount === 0) {
-        // frontmatter開始（最初のスライド）
-        inFrontmatter = true;
-        frontmatterCount = 1;
-        currentBlock.push(line);
-      } else if (inFrontmatter && frontmatterCount === 1) {
-        // frontmatter終了
-        inFrontmatter = false;
-        frontmatterCount = 2;
-        currentBlock.push(line);
-      } else if (!inFrontmatter && frontmatterCount === 2) {
-        // 新しいスライドの開始 = 現在のブロックを終了して、新しいfrontmatterを開始
-        if (currentBlock.length > 0) {
-          blocks.push(currentBlock.join('\n'));
-        }
-        currentBlock = [line]; // 新しいブロックの最初の行として---を追加
-        inFrontmatter = true;
-        frontmatterCount = 1;
-      } else {
-        // その他のケース
-        currentBlock.push(line);
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+
+    // frontmatterの開始を検出（次の行が layout: で始まる場合）
+    if (line === '---' && !inFrontmatter && i + 1 < lines.length && lines[i + 1].startsWith('layout:')) {
+      // 前のブロックがあれば保存
+      if (currentBlock.length > 0) {
+        blocks.push(currentBlock.join('\n'));
+        currentBlock = [];
       }
-    } else {
+      inFrontmatter = true;
+      hasFrontmatter = true;
+      currentBlock.push(line);
+    }
+    // frontmatterの終了を検出
+    else if (line === '---' && inFrontmatter) {
+      currentBlock.push(line);
+      inFrontmatter = false;
+      hasFrontmatter = false;
+      // frontmatterの後のコンテンツも同じブロックに含める
+    }
+    // 通常のスライド区切り（frontmatterでない---）
+    else if (line === '---' && !inFrontmatter) {
+      // 前のブロックがあれば保存
+      if (currentBlock.length > 0) {
+        blocks.push(currentBlock.join('\n'));
+        currentBlock = [];
+      }
+      // ---は区切りなので、ブロックには含めない
+    }
+    else {
       currentBlock.push(line);
     }
   }
@@ -74,18 +81,21 @@ function splitSlides(text) {
     blocks.push(currentBlock.join('\n'));
   }
 
-  return blocks.filter(block => block.trim());
+  return blocks.map(b => b.trim()).filter(b => b);
 }
 
 const slideBlocks = splitSlides(markdown);
 
 // 各スライドブロックをパース
-function parseSlideBlock(block) {
+function parseSlideBlock(block, index) {
   const lines = block.trim().split('\n');
-  let layout = 'bullet-slide'; // デフォルトレイアウト
+  let layout = null;
   let content = [];
   let backgroundImage = null;
+  let chartType = null;
+  let chartData = null;
 
+  // frontmatter形式のチェック
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
 
@@ -113,6 +123,14 @@ function parseSlideBlock(block) {
       // background-image指定を抽出
       backgroundImage = line.replace('background-image:', '').trim();
       continue;
+    } else if (line.startsWith('chart-type:')) {
+      // chart-type指定を抽出
+      chartType = line.replace('chart-type:', '').trim();
+      continue;
+    } else if (line.startsWith('chart-data:')) {
+      // chart-data指定を抽出
+      chartData = line.replace('chart-data:', '').trim();
+      continue;
     } else if (line === '---') {
       // frontmatter区切り
       continue;
@@ -121,7 +139,41 @@ function parseSlideBlock(block) {
     }
   }
 
-  return { layout, content: content.join('\n').trim(), backgroundImage };
+  const contentStr = content.join('\n').trim();
+
+  // レイアウトが指定されていない場合、自動判定
+  if (!layout) {
+    // 最初のスライド
+    if (index === 0) {
+      layout = 'title-slide';
+    }
+    // テーブルを含む
+    else if (contentStr.includes('|') && contentStr.match(/\|.*\|/)) {
+      layout = 'table-slide';
+    }
+    // 引用を含む
+    else if (contentStr.includes('>')) {
+      layout = 'quote-slide';
+    }
+    // コードブロックを含む
+    else if (contentStr.includes('```')) {
+      layout = 'code-slide';
+    }
+    // 画像を含む
+    else if (contentStr.includes('![')) {
+      layout = 'image-center';
+    }
+    // 1行の短いテキストのみ（ワンライン）
+    else if (lines.length <= 3 && !contentStr.includes('\n') && contentStr.length < 50) {
+      layout = 'oneline-slide';
+    }
+    // デフォルト
+    else {
+      layout = 'bullet-slide';
+    }
+  }
+
+  return { layout, content: contentStr, backgroundImage, chartType, chartData };
 }
 
 // Markdown記法をHTMLに変換（改良版）
@@ -198,8 +250,7 @@ function escapeHtml(text) {
 // HTMLテンプレートを生成
 function generateHtml(slides) {
   const slidesHtml = slides.map((slide, index) => {
-    const { layout, content, backgroundImage } = slide;
-    const htmlContent = markdownToHtml(content);
+    const { layout, content, backgroundImage, chartType, chartData } = slide;
 
     // 装飾要素
     const decorations = `
@@ -221,6 +272,38 @@ function generateHtml(slides) {
     // background-imageがある場合はstyle属性を追加
     const styleAttr = backgroundImage ? ` style="background-image: url(${backgroundImage})"` : '';
 
+    // chart-slideの場合は特別な処理
+    let htmlContent;
+    if (layout === 'chart-slide' && chartData) {
+      const chartId = `chart-${index}`;
+      htmlContent = `${markdownToHtml(content)}
+        <div class="chart-container">
+            <canvas id="${chartId}"></canvas>
+        </div>
+        <script>
+        (function() {
+            const ctx = document.getElementById('${chartId}').getContext('2d');
+            const chartData = ${chartData};
+            new Chart(ctx, {
+                type: '${chartType || 'bar'}',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        })();
+        </script>`;
+    } else {
+      htmlContent = markdownToHtml(content);
+    }
+
     return `
     <!-- ${index + 1}. ${layout} -->
     <section class="slide ${layout}"${styleAttr}>
@@ -238,18 +321,18 @@ ${htmlContent}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Presentation</title>
-    <link rel="stylesheet" href="./.claude/skills/slide-generator/resources/styles.css">
-    <link rel="stylesheet" href="./.claude/skills/slide-generator/resources/vendor/prism.css">
+    <link rel="stylesheet" href="resources/styles.css">
+    <link rel="stylesheet" href="resources/vendor/prism.css">
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700;900&display=swap" rel="stylesheet">
-    <script src="./.claude/skills/slide-generator/resources/vendor/chart.min.js"></script>
-    <script src="./.claude/skills/slide-generator/resources/vendor/chartjs-plugin-datalabels.min.js"></script>
-    <script src="./.claude/skills/slide-generator/resources/vendor/prism.js"></script>
-    <script src="./.claude/skills/slide-generator/resources/vendor/prism-javascript.min.js"></script>
+    <script src="resources/vendor/chart.min.js"></script>
+    <script src="resources/vendor/chartjs-plugin-datalabels.min.js"></script>
+    <script src="resources/vendor/prism.js"></script>
+    <script src="resources/vendor/prism-javascript.min.js"></script>
 </head>
 <body>
 ${slidesHtml}
 
-    <script src="./.claude/skills/slide-generator/resources/script.js"></script>
+    <script src="resources/script.js"></script>
 </body>
 </html>`;
 }
@@ -258,7 +341,7 @@ ${slidesHtml}
 try {
   console.log(`📖 Markdownファイルを読み込んでいます: ${inputFile}`);
 
-  const slides = slideBlocks.map(parseSlideBlock);
+  const slides = slideBlocks.map((block, index) => parseSlideBlock(block, index));
 
   console.log(`✅ ${slides.length}枚のスライドを検出しました`);
 
