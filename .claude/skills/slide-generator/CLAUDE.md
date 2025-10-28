@@ -2,35 +2,587 @@
 
 ## 目的
 
-このスキルは**スライド生成システム**を提供します。成果物は個別のスライドではなく、スライドを生成するためのツールとテンプレートシステムです。
+このスキルは**対話的なプレゼンテーション生成アシスタント**です。ユーザーが提供する長文や要件を分析し、最適なスライド構成を提案・生成します。
 
-## スキルが提供するもの
+**重要**: 単にスライドを作るのではなく、ユーザーと対話しながらより良いプレゼンテーションを作り上げることが目的です。
 
-### 1. デザインシステム (Wolsey Design System)
+## ワークフロー
+
+### 1. ユーザー入力の分析
+
+ユーザーから長文や要件が提供されたら、以下を分析します：
+
+- **主要なメッセージ**: 何を伝えたいのか
+- **ターゲット**: 誰に向けたプレゼンテーションか
+- **トーン**: フォーマル/カジュアル、技術的/一般向け
+- **ボリューム**: 想定スライド枚数（5-20枚推奨）
+
+### 2. スライド構成の提案
+
+分析結果をもとに、以下の形式でスライド構成を提案します：
+
+```
+【提案するスライド構成】
+
+1. タイトルスライド
+   - タイトル: "〇〇〇"
+   - サブタイトル: "〇〇〇"
+
+2. 箇条書きスライド
+   - 見出し: "〇〇〇"
+   - 要点:
+     - 〇〇〇
+     - 〇〇〇
+   ⚠️ 文字数制限: 見出し50文字、各要点80文字
+
+3. 画像中心スライド
+   - 見出し: "〇〇〇"
+   - キャプション: "〇〇〇"
+   📸 画像が必要: [説明]
+
+4. グラフスライド
+   - 見出し: "〇〇〇"
+   📊 データが必要: [X軸のラベル、Y軸の値]
+
+...
+```
+
+### 3. リソースの要求
+
+画像やデータが必要な場合は、明示的に要求します：
+
+**画像が必要な場合:**
+- スライド番号と用途を明示
+- 推奨サイズ/アスペクト比を提示
+- 「画像を提供してください」と明記
+
+**データが必要な場合:**
+- グラフの種類（棒グラフ、折れ線グラフ、円グラフ）
+- 必要なデータ形式を提示
+- 例を示す
+
+### 4. 対話的な調整
+
+提案に対してユーザーからフィードバックを受け取ったら：
+- スライドの追加/削除
+- レイアウトの変更
+- 内容の調整
+- 順序の入れ替え
+
+### 5. 生成と検証
+
+確定したらスライドを生成し：
+1. Markdownファイルを作成
+2. `generate-slides.js`でHTMLに変換
+3. `prepare-presentation.sh`でサムネイル生成
+4. Chrome DevTools MCPで確認
+5. 必要に応じて修正
+
+## レイアウトガイド
+
+### 1. タイトルスライド (title-slide)
+
+**使用シーン**: プレゼンテーションの最初
+
+**文字数制限**:
+- タイトル: 30文字以内（推奨）
+- サブタイトル: 60文字以内（推奨）
+
+**必要なリソース**: なし
+
+**例**:
+```markdown
+---
+layout: title-slide
+---
+
+# Claude Code で始める
+## 次世代のスライド生成
+```
+
+### 2. 箇条書きスライド (bullet-slide)
+
+**使用シーン**: 要点を列挙する
+
+**文字数制限**:
+- 見出し: 50文字以内
+- 各箇条書き: 80文字以内
+- 箇条書き項目数: 3-6個（推奨）
+
+**必要なリソース**: なし
+
+**例**:
+```markdown
+---
+layout: bullet-slide
+---
+
+## 主な機能
+
+- 16種類のレイアウトパターン
+- Chart.js統合でグラフ描画
+- Markdownベースのワークフロー
+```
+
+### 3. 2カラムスライド (two-column)
+
+**使用シーン**: テキストと画像を並べる、2つの概念を対比する
+
+**文字数制限**:
+- 見出し: 50文字以内
+- 各カラムの見出し: 30文字以内
+- 各カラムの本文: 200文字以内
+
+**必要なリソース**: 右カラムに画像が必要な場合が多い
+- 📸 **画像推奨**: アスペクト比 3:4 または 1:1
+- 最大高さ: 800px
+
+**例**:
+```markdown
+---
+layout: two-column
+---
+
+<div class="column-left">
+
+### Claude Code方式
+新しいAI駆動の開発体験
+
+</div>
+
+<div class="column-right">
+
+![開発画面](./images/screenshot.png)
+
+</div>
+```
+
+### 4. 引用スライド (quote-slide)
+
+**使用シーン**: 重要な言葉や引用を強調
+
+**文字数制限**:
+- 引用文: 120文字以内（推奨）
+- 引用元: 30文字以内
+
+**必要なリソース**: なし
+
+**例**:
+```markdown
+---
+layout: quote-slide
+---
+
+> シンプルさは究極の洗練である
+
+— レオナルド・ダ・ヴィンチ
+```
+
+### 5. 3カラムスライド (three-column)
+
+**使用シーン**: 3つの要素を並列に提示
+
+**文字数制限**:
+- 見出し: 50文字以内
+- 各カラムの見出し: 20文字以内
+- 各カラムの本文: 100文字以内
+
+**必要なリソース**: なし（背景が白なので画像は不要）
+
+**例**:
+```markdown
+---
+layout: three-column
+---
+
+## 3つの柱
+
+### 速度
+高速な処理で待ち時間ゼロ
+
+### 品質
+プロフェッショナルなデザイン
+
+### 柔軟性
+16種類のレイアウト
+```
+
+### 6. フルイメージスライド (full-image)
+
+**使用シーン**: インパクトのある画像で感情を引き出す
+
+**文字数制限**:
+- 見出し: 30文字以内
+- 本文: 100文字以内
+
+**必要なリソース**:
+- 📸 **画像必須**: 高解像度 (1920x1080以上推奨)
+- アスペクト比: 16:9
+
+**例**:
+```markdown
+---
+layout: full-image
+background-image: ./images/background.jpg
+---
+
+## 未来を創造する
+```
+
+### 7. エンディング/クレジットスライド (credits-slide)
+
+**使用シーン**: プレゼンテーションの最後、謝辞
+
+**文字数制限**:
+- 見出し: 30文字以内
+- 各項目: 50文字以内
+- 項目数: 3-8個
+
+**必要なリソース**: なし
+
+**例**:
+```markdown
+---
+layout: credits-slide
+---
+
+## ありがとうございました
+
+- お問い合わせ: example@email.com
+- GitHub: @username
+- Twitter: @username
+```
+
+### 8. 画像中心スライド (image-center)
+
+**使用シーン**: 図やスクリーンショットを説明
+
+**文字数制限**:
+- 見出し: 50文字以内
+- キャプション: 100文字以内
+
+**必要なリソース**:
+- 📸 **画像必須**:
+- 最大幅: 70% of viewport
+- 最大高さ: 60vh
+
+**例**:
+```markdown
+---
+layout: image-center
+---
+
+## アーキテクチャ
+
+![システム構成図](./images/architecture.png)
+
+マイクロサービスベースの設計
+```
+
+### 9. ワンラインテキスト (oneline-slide)
+
+**使用シーン**: シンプルなメッセージで強い印象を残す
+
+**文字数制限**:
+- メインメッセージ: 20文字以内（大きい文字用）
+- または: 30文字以内（中くらい文字用）
+- または: 50文字以内（小さい文字用）
+
+**必要なリソース**: なし
+
+**例**:
+```markdown
+---
+layout: oneline-slide
+---
+
+# Think Big, Start Simple
+```
+
+### 10. プロフィールスライド (profile-slide)
+
+**使用シーン**: 登壇者紹介、チーム紹介
+
+**文字数制限**:
+- 名前: 20文字以内
+- 肩書き: 30文字以内
+- 自己紹介: 200文字以内
+- 連絡先項目: 各50文字以内
+
+**必要なリソース**:
+- 📸 **プロフィール画像**: 200x200px推奨、正方形
+
+**例**:
+```markdown
+---
+layout: profile-slide
+---
+
+![プロフィール写真](./images/profile.jpg)
+
+### 山田太郎
+シニアエンジニア
+
+オープンソースコミュニティで活動する開発者。
+10年以上のWeb開発経験を持つ。
+
+- GitHub: @yamada
+- Twitter: @yamada_dev
+```
+
+### 11. テーブルスライド (table-slide)
+
+**使用シーン**: データの比較、仕様の提示
+
+**文字数制限**:
+- 見出し: 50文字以内
+- 各セル: 30文字以内
+- 行数: 2-6行（推奨）
+- 列数: 2-4列（推奨）
+
+**必要なリソース**: なし
+
+**例**:
+```markdown
+---
+layout: table-slide
+---
+
+## プラン比較
+
+| 機能 | フリー | プロ |
+|------|--------|------|
+| スライド数 | 10枚 | 無制限 |
+| サポート | なし | あり |
+```
+
+### 12. コード表示スライド (code-slide)
+
+**使用シーン**: コードの説明、技術的なデモ
+
+**文字数制限**:
+- 見出し: 50文字以内
+- コード: 20行以内（推奨）
+
+**必要なリソース**: なし（Prism.jsが自動でハイライト）
+
+**例**:
+```markdown
+---
+layout: code-slide
+---
+
+## コード例
+
+\`\`\`javascript
+function generateSlides(content) {
+  return parseMarkdown(content)
+    .map(slide => renderSlide(slide));
+}
+\`\`\`
+```
+
+### 13. グラフスライド (chart-slide)
+
+**使用シーン**: 単一のグラフ・チャートを大きく表示
+
+**文字数制限**:
+- 見出し: 50文字以内
+
+**必要なリソース**:
+- 📊 **データ必須**:
+  - グラフの種類（bar, line, pie, doughnut, radar, polarArea）
+  - ラベル配列
+  - データ配列
+  - オプション（色、凡例など）
+
+**データ形式例**:
+```json
+{
+  "type": "bar",
+  "labels": ["2020", "2021", "2022", "2023"],
+  "datasets": [{
+    "label": "売上（百万円）",
+    "data": [120, 150, 180, 220]
+  }]
+}
+```
+
+### 14. 2つのグラフ並列 (dual-chart-slide)
+
+**使用シーン**: 2つのデータを比較
+
+**文字数制限**:
+- メイン見出し: 50文字以内
+- 各グラフの見出し: 30文字以内
+
+**必要なリソース**:
+- 📊 **データ必須**: 2つのグラフ分のデータ
+
+### 15. グラフ+テキスト並列 (chart-text-slide)
+
+**使用シーン**: グラフと解説を並べる
+
+**文字数制限**:
+- メイン見出し: 50文字以内
+- 解説見出し: 30文字以内
+- 箇条書き: 各80文字以内、3-5個
+
+**必要なリソース**:
+- 📊 **データ必須**: 1つのグラフ分のデータ
+
+### 16. Before/After比較スライド (diff-slide)
+
+**使用シーン**: 導入前後の変化を示す
+
+**文字数制限**:
+- メイン見出し: 50文字以内
+- 各パネルの見出し: 20文字以内（"Before"/"After"推奨）
+- 各パネルの項目: 各40文字以内、3-5個
+
+**必要なリソース**: なし
+
+**例**:
+```markdown
+---
+layout: diff-slide
+---
+
+## 導入効果
+
+<div class="diff-container">
+
+<div class="diff-panel before">
+
+### Before
+- スライド作成に3時間
+- デザインの統一に苦労
+- レイアウト調整で疲弊
+
+</div>
+
+<div class="diff-panel after">
+
+### After
+- スライド作成が15分に短縮
+- 自動でデザイン統一
+- 最適レイアウトを自動選択
+
+</div>
+
+</div>
+```
+
+## 対話の進め方
+
+### ステップ1: ユーザーの要求を理解する
+
+```
+ユーザー: 「新製品のプレゼンを作りたいです。特徴は...（長文）」
+
+あなた:
+「新製品のプレゼンテーション作成を承りました。
+内容を分析して、最適なスライド構成を提案します。
+
+【確認事項】
+- 想定時間: 10分
+- 対象: 経営陣・一般顧客
+- トーン: ビジネスフォーマル
+
+以下の構成を提案します...」
+```
+
+### ステップ2: リソースを明示的に要求する
+
+```
+あなた:
+「スライド3で製品画像が必要です。
+📸 必要な画像: 製品の全体像（推奨サイズ: 800x600px）
+
+スライド7でグラフを表示します。
+📊 必要なデータ: 過去4年の売上推移
+フォーマット: ["2020", "2021", "2022", "2023"] と各年の数値
+
+これらを提供いただけますか？」
+```
+
+### ステップ3: 文字数超過を警告する
+
+```
+あなた:
+「⚠️ スライド2の箇条書きが長すぎます。
+現在: 120文字 → 推奨: 80文字以内
+
+以下のように短縮してはどうでしょうか：
+- 【修正前】「当社の新製品は業界初の技術を採用しており、従来製品と比較して30%の性能向上を実現しています」
+- 【修正後】「業界初の技術で30%の性能向上」
+」
+```
+
+### ステップ4: 最終確認
+
+```
+あなた:
+「スライド構成が確定しました。生成を開始します。
+
+【最終構成】
+- タイトルスライド
+- 箇条書き x3
+- 2カラム x2
+- グラフスライド x1
+- エンディング
+
+合計: 8枚
+
+よろしければ生成を開始します。」
+```
+
+## ベストプラクティス
+
+### 1. 文字数を厳守する
+
+- スライドは100vw × 100vhに収まる必要がある
+- 文字が多すぎると読めなくなる
+- 超過した場合は必ず警告し、短縮を提案する
+
+### 2. 画像を効果的に使う
+
+- テキストだけのスライドが3枚以上続かないようにする
+- 画像が必要な場面では明示的に要求する
+- 画像がない場合は代替案を提示する
+
+### 3. グラフは適切に選択する
+
+- **棒グラフ**: 比較、ランキング
+- **折れ線グラフ**: 時系列の変化
+- **円グラフ**: 割合、構成比
+- **レーダーチャート**: 多次元比較
+
+### 4. スライドの流れを考える
+
+1. タイトルで引き込む
+2. 問題提起（ワンラインテキスト or 箇条書き）
+3. 解決策（2カラム or 画像中心）
+4. 証拠（グラフ or Before/After）
+5. まとめ（箇条書き）
+6. エンディング
+
+### 5. リズムを作る
+
+- レイアウトを変化させる
+- 重い情報の後に軽い情報
+- テキスト → 画像 → グラフの順で変化をつける
+
+## 技術仕様
+
+### デザインシステム (Wolsey Design System)
+
 - 一貫性のあるカラーパレット、タイポグラフィ、レイアウト
 - 幾何学的装飾要素（geometric decorations）
 - レスポンシブデザイン（100vw × 100vh固定）
 
-### 2. 16種類のレイアウトテンプレート
-1. タイトルスライド (title-slide)
-2. 箇条書きスライド (bullet-slide)
-3. 2カラムスライド (two-column)
-4. 引用スライド (quote-slide)
-5. 3カラムスライド (three-column)
-6. フルイメージスライド (full-image)
-7. エンディング/クレジットスライド (credits-slide)
-8. アクセント見出しスライド
-9. 画像中心スライド (image-center)
-10. プロフィールスライド (profile-slide)
-11. テーブルスライド (table-slide)
-12. コード表示スライド (code-slide)
-13. グラフスライド (chart-slide) - Chart.js統合
-14. 2つのグラフ並列 (dual-chart-slide)
-15. グラフ+テキスト並列 (chart-text-slide)
-16. Before/After比較スライド (diff-slide)
-17. ワンラインテキスト (oneline-slide)
+### インタラクティブ機能
 
-### 3. インタラクティブ機能
 - **キーボード操作**:
   - `→` / `←`: 次/前のスライド
   - `Home` / `End`: 最初/最後のスライド
@@ -40,251 +592,137 @@
 - **サムネイル一覧**: 全スライドのサムネイル表示とクイックナビゲーション
 - **ページ番号**: 右下に現在位置表示
 
-### 4. 技術統合
+### 技術統合
+
 - **Chart.js**: グラフ・チャートの描画
 - **Prism.js**: コードのシンタックスハイライト
 - **レスポンシブCanvas**: グラフの自動リサイズ
 
-### 5. ビルドシステム
-- **generate-slides.js**: Markdownからスライド生成
-- **prepare-presentation.sh**: サムネイル生成とプレゼンテーション準備
-- **自動サムネイル生成**: Puppeteerを使用した各スライドのスクリーンショット
+### ビルドシステム
 
-## 使い方
-
-### スライド生成
 ```bash
-node .claude/skills/slide-generator/generate-slides.js input.md output.html
+# 1. Markdownからスライド生成
+node .claude/skills/slide-generator/scripts/generate-slides.js input.md output.html
+
+# 2. プレゼンテーション準備（サムネイル生成）
+bash .claude/skills/slide-generator/scripts/prepare-presentation.sh output.html slide-name
+
+# 3. ブラウザで確認
+open .claude/skills/slide-generator/deploy/slide-name/index.html
 ```
 
-### プレゼンテーション準備（サムネイル生成）
-```bash
-bash .claude/skills/slide-generator/prepare-presentation.sh output.html
-```
+### デプロイ
 
-### 設定ファイルから生成
-```bash
-node .claude/skills/slide-generator/generate-slides.js config.json
-```
-
-### デプロイ（推奨: Surge）
 ```bash
 cd .claude/skills/slide-generator/deploy
 
-# Surgeでデプロイ（推奨・最も簡単）
-npm install -g surge  # 初回のみ
-surge
-
-# カスタムドメインを指定
+# Surge（推奨）
 surge --domain my-presentation.surge.sh
-```
 
-**デプロイオプション:**
-- **Surge** (推奨): ユーザー指定がない場合のデフォルト
-- **Netlify**: `netlify deploy --prod`
-- **GitHub Pages**: リポジトリ設定から有効化
-- **Vercel**: `vercel --prod`
+# Netlify
+netlify deploy --prod
+
+# Vercel
+vercel --prod
+```
 
 ## ファイル構成
 
 ```
 .claude/skills/slide-generator/
 ├── CLAUDE.md                    # このファイル（スキルの説明）
-├── generate-slides.js           # スライド生成スクリプト
-├── prepare-presentation.sh      # プレゼンテーション準備シェル
+├── scripts/
+│   ├── generate-slides.js       # スライド生成スクリプト
+│   ├── prepare-presentation.sh  # プレゼンテーション準備シェル
+│   └── generate-thumbnails.js   # サムネイル生成スクリプト
 ├── resources/
 │   ├── styles.css              # メインスタイルシート（Wolseyデザインシステム）
 │   ├── script.js               # インタラクティブ機能のJavaScript
-│   ├── layouts-example.html    # 全レイアウトの例
 │   └── vendor/                 # サードパーティライブラリ
 │       ├── chart.min.js
 │       ├── prism.js
-│       └── ...
-└── examples.md                  # 使用例
+│       └── prism.css
+└── deploy/                      # デプロイ用ディレクトリ
+    └── resources/              # 共通リソース（自動コピー）
 ```
 
 ## 重要な原則
 
-1. **スキルはツールを提供する**: 個別のスライドではなく、スライド生成システムを構築する
-2. **テンプレートを修正する**: 成果物（生成されたHTML）ではなく、resources/配下のテンプレートファイルを修正する
-3. **ビルドプロセスを尊重する**: generate-slides.js → prepare-presentation.sh の流れでビルドする
-4. **100vw × 100vh厳守**: すべてのスライドはビューポートに収まる必要がある
-5. **サムネイル依存**: サムネイル一覧は prepare-presentation.sh で生成された画像を使用する
+1. **対話を重視する**: ユーザーの要求を一方的に解釈せず、提案→確認→調整のサイクルを回す
+2. **制約を明示する**: 文字数制限、画像の必要性、データの要求を明確に伝える
+3. **品質を保証する**: 生成後は必ずChrome DevTools MCPで確認する
+4. **ビルドプロセスを尊重する**: generate-slides.js → prepare-presentation.sh の流れでビルドする
+5. **100vw × 100vh厳守**: すべてのスライドはビューポートに収まる必要がある
 
 ## 修正時の注意
 
-- ✅ `.claude/skills/slide-generator/resources/styles.css` を修正
-- ✅ `.claude/skills/slide-generator/resources/script.js` を修正
-- ✅ `.claude/skills/slide-generator/generate-slides.js` を修正
-- ❌ 生成されたHTMLファイル（output.html等）を直接修正しない
+- ✅ `resources/styles.css` を修正してテンプレートを変更
+- ✅ `resources/script.js` を修正してインタラクティブ機能を追加
+- ✅ `scripts/generate-slides.js` を修正してビルドプロセスを改善
+- ❌ 生成されたHTMLファイルを直接修正しない
 - ✅ **作業後の検証はChrome DevTools MCPで自分で確認すること**
 
 ## 修正履歴
 
-### サムネイルナビゲーション修正 (2025-10-28)
+<details>
+<summary>レイアウト最適化 (2025-10-28)</summary>
 
-**問題**: サムネイル一覧でクリックした番号と遷移先のスライドが1つずれる
+### スライド10-16の横中央配置
 
-**原因**: `resources/script.js:55-65` のグローバルクリックハンドラーがサムネイルクリック時も実行され、`currentSlide++` が二重に実行されていた
+**変更内容**:
+- スライド10 (profile-slide): `max-width: 900px`
+- スライド11 (image-center): `max-width: 1100px`
+- スライド15 (diff-slide): `.slide-content`に`max-width: 1200px`
+- スライド16 (credits-slide): 幅を`700px` → `900px`に拡大、中央寄せ
 
-**修正**: サムネイル一覧をクリック除外対象に追加
-```javascript
-// 修正前
-if (!e.target.closest('.progress-bar')) {
+### スライド9の装飾非表示
 
-// 修正後
-if (!e.target.closest('.progress-bar') && !e.target.closest('.thumbnail-view')) {
-```
-
-**ファイル**: `.claude/skills/slide-generator/resources/script.js`
-
-### サムネイルアスペクト比修正 (2025-10-28)
-
-**問題**: サムネイル一覧で画像が縦に潰れて表示される
-
-**原因**: `.thumbnail-preview` のアスペクト比が `16 / 10` に設定されていたが、実際のスライドとサムネイル画像は `16 / 9`
-
-**修正**: `resources/styles.css:544` のアスペクト比を修正
-```css
-/* 修正前 */
-aspect-ratio: 16 / 10;
-
-/* 修正後 */
-aspect-ratio: 16 / 9;
-```
-
-**ファイル**: `.claude/skills/slide-generator/resources/styles.css`
-
-### パス置換処理修正 (2025-10-28)
-
-**問題**: prepare-presentation.shがpresentation.htmlのパスを正しく置換できず、script.jsが読み込まれない
-
-**原因**: sedコマンドが`resources/`のみをマッチしていたが、実際のパスは`.claude/skills/slide-generator/resources/`と`./. claude/skills/slide-generator/resources/`の2種類存在した
-
-**修正**: 両方のパス形式に対応するsedコマンドを追加
-```bash
-# 修正前
-sed -i.bak 's|resources/|../resources/|g' "$SLIDE_DIR/index.html"
-
-# 修正後
-sed -i.bak 's|\./\.claude/skills/slide-generator/resources/|../resources/|g' "$SLIDE_DIR/index.html"
-sed -i.bak 's|\.claude/skills/slide-generator/resources/|../resources/|g' "$SLIDE_DIR/index.html"
-```
-
-**ファイル**: `.claude/skills/slide-generator/scripts/prepare-presentation.sh`
-
-### レイアウト横中央配置追加 (2025-10-28)
-
-**問題**: 一部のスライドレイアウトで内容が横方向にセンタリングされていなかった
-
-**対象スライド**:
-- Slide 2: bullet-slide
-- Slide 3: two-column
-- Slide 7: table-slide
-- Slide 8: code-slide (既に中央配置済み)
-- Slide 10: profile-slide (既に中央配置済み)
-- Slide 11: image-center (既に中央配置済み)
-- Slide 15: diff-slide
-- Slide 16: credits-slide
-
-**修正アプローチ**: `.slide-content`自体に`max-width`と`margin: auto`を設定してコンテナを中央配置
-
-```css
-/* 例: bullet-slide */
-.slide.bullet-slide .slide-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  max-width: 900px;          /* 追加 */
-  margin-left: auto;          /* 追加 */
-  margin-right: auto;         /* 追加 */
-}
-
-.slide.bullet-slide .bullet-list {
-  text-align: left;
-}
-
-/* 例: table-slide */
-.slide.table-slide .slide-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  max-width: 1000px;          /* 追加 */
-  margin-left: auto;          /* 追加 */
-  margin-right: auto;         /* 追加 */
-}
-
-/* 例: credits-slide */
-.slide.credits-slide .slide-content {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  max-width: 700px;           /* 追加 */
-  margin-left: auto;          /* 追加 */
-  margin-right: auto;         /* 追加 */
-}
-```
-
-**メリット**:
-- コンテンツ幅を制限しつつ中央配置を実現
-- 各スライドタイプに最適な幅を個別設定可能
-- レスポンシブ対応が容易
-
-**検証**: Chrome DevTools MCPで各スライドの配置を確認し、`.slide-content`が正しく中央配置されていることを確認
-
-**ファイル**: `.claude/skills/slide-generator/resources/styles.css`
-
-### Two-columnレイアウト最適化 (2025-10-28)
-
-**問題**:
-1. スライド3（two-column）で左上の幾何学装飾とテキストが重なっていた
-2. 横幅が狭く、装飾との距離が不十分
-3. 左右のカラムが中央揃えで視覚的なバランスが取れていない
+**問題**: ワンラインテキストと幾何学装飾が重なる
 
 **修正**:
-1. `max-width`を1100pxに拡大して横幅を広げる
-2. 左カラムを`align-self: center`に設定し、`margin-bottom: 130px`で上へ
-3. 右カラムを`align-self: center`に設定し、`margin-top: 130px`で下へ
-4. カラム比率を50:50に変更
-
 ```css
-.slide.two-column .slide-content {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;    /* 変更: centerからflex-start */
-  justify-content: center;
-  height: 100%;
-  max-width: 1100px;          /* 変更: 950px → 1100px */
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.slide.two-column .column-left {
-  flex: 0 0 50%;              /* 変更: 55% → 50% */
-  padding-right: var(--spacing-xl);
-  align-self: center;         /* 追加: 中央基準 */
-  margin-bottom: 130px;       /* 追加: 上へ */
-}
-
-.slide.two-column .column-right {
-  flex: 0 0 50%;              /* 変更: 45% → 50% */
-  display: flex;
-  flex-direction: column;
-  align-self: center;         /* 追加: 中央基準 */
-  margin-top: 130px;          /* 追加: 下へ */
+.slide.oneline-slide .geometric-decoration {
+  display: none;
 }
 ```
 
-**効果**:
-- 左カラム（Claude Code方式）が適度に上に配置され、左上の装飾と重ならない
-- 右カラム（従来の方法）が適度に下に配置され、右下の装飾と重ならない
-- 横幅が広がり、コンテンツがより読みやすく
-- `flex-end`/`flex-start`よりも穏やかな配置で視覚的バランスが良好
+### ワークフロー改善
 
-**検証**: Chrome DevTools MCPでスライド3を確認し、装飾とテキストが重ならず、視覚的バランスが良好なことを確認
+**prepare-presentation.sh**:
+- リソースを毎回自動コピー
+- パス置換処理を両方の形式に対応
+</details>
 
-**ファイル**: `.claude/skills/slide-generator/resources/styles.css`
+<details>
+<summary>Two-columnレイアウト最適化 (2025-10-28)</summary>
+
+**問題**: 左上の幾何学装飾とテキストが重なる
+
+**修正**:
+- `max-width`を1100pxに拡大
+- 左カラム: `align-self: center`, `margin-bottom: 130px`
+- 右カラム: `align-self: center`, `margin-top: 130px`
+- カラム比率を50:50に変更
+
+**効果**: 装飾との重なりを解消し、視覚的バランスが向上
+</details>
+
+<details>
+<summary>サムネイルナビゲーション修正 (2025-10-28)</summary>
+
+**問題**: サムネイルクリック時にスライド番号が1つずれる
+
+**修正**: `resources/script.js`のグローバルクリックハンドラーからサムネイル一覧を除外
+
+```javascript
+if (!e.target.closest('.progress-bar') && !e.target.closest('.thumbnail-view')) {
+```
+</details>
+
+<details>
+<summary>サムネイルアスペクト比修正 (2025-10-28)</summary>
+
+**問題**: サムネイル画像が縦に潰れる
+
+**修正**: `resources/styles.css`のアスペクト比を`16 / 10` → `16 / 9`に変更
+</details>
