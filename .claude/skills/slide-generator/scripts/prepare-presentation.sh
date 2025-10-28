@@ -41,7 +41,7 @@ fi
 HTML_BASENAME=$(basename "$HTML_FILE" .html)
 
 # 出力先ディレクトリ
-DEPLOY_DIR="deploy"
+DEPLOY_DIR=".claude/skills/slide-generator/deploy"
 SLIDE_DIR="$DEPLOY_DIR/$SLIDE_NAME"
 
 echo -e "${BLUE}📦 プレゼンテーション準備ツール${NC}"
@@ -56,11 +56,12 @@ mkdir -p "$DEPLOY_DIR"
 
 # resources を deploy 直下にコピー（毎回更新）
 echo -e "${YELLOW}📚 共通リソースを更新しています...${NC}"
-if [ -d "resources" ]; then
-    cp -r resources "$DEPLOY_DIR/"
+RESOURCES_DIR=".claude/skills/slide-generator/resources"
+if [ -d "$RESOURCES_DIR" ]; then
+    cp -r "$RESOURCES_DIR" "$DEPLOY_DIR/"
     echo -e "${GREEN}  ✓ resources をコピーしました${NC}"
 else
-    echo -e "${RED}  ✗ resources が見つかりません${NC}"
+    echo -e "${RED}  ✗ resources が見つかりません: $RESOURCES_DIR${NC}"
     exit 1
 fi
 
@@ -84,22 +85,27 @@ echo ""
 echo -e "${YELLOW}📸 サムネイルを生成しています...${NC}"
 
 # node_modulesが存在しない場合はインストール
-if [ ! -d "node_modules/puppeteer" ]; then
+if [ ! -d ".claude/skills/slide-generator/node_modules/puppeteer" ]; then
     echo -e "${YELLOW}📥 Puppeteerをインストールしています...${NC}"
+    cd .claude/skills/slide-generator
     npm install --silent puppeteer
+    cd - > /dev/null
 fi
 
 # generate-thumbnails.jsが存在するか確認
-if [ ! -f "scripts/generate-thumbnails.js" ]; then
-    echo -e "${RED}エラー: scripts/generate-thumbnails.js が見つかりません${NC}"
+THUMBNAILS_SCRIPT=".claude/skills/slide-generator/scripts/generate-thumbnails.js"
+if [ ! -f "$THUMBNAILS_SCRIPT" ]; then
+    echo -e "${RED}エラー: $THUMBNAILS_SCRIPT が見つかりません${NC}"
     exit 1
 fi
 
-# サムネイルを生成（スライドディレクトリで実行）
-cd "$SLIDE_DIR"
-SCRIPT_PATH="../../scripts/generate-thumbnails.js"
-node "$SCRIPT_PATH" "index.html"
-cd - > /dev/null
+# サムネイルを生成
+# 絶対パスを取得
+THUMBNAILS_SCRIPT_ABS=$(cd "$(dirname "$THUMBNAILS_SCRIPT")" && pwd)/$(basename "$THUMBNAILS_SCRIPT")
+SLIDE_DIR_ABS=$(cd "$SLIDE_DIR" && pwd)
+
+# サムネイル生成スクリプトを実行
+node "$THUMBNAILS_SCRIPT_ABS" "$SLIDE_DIR_ABS/index.html"
 
 # サムネイルが生成されたか確認
 if [ -d "$SLIDE_DIR/thumbnails/index" ]; then

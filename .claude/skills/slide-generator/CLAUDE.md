@@ -831,3 +831,68 @@ if (!e.target.closest('.progress-bar') && !e.target.closest('.thumbnail-view')) 
 
 **修正**: `resources/styles.css`のアスペクト比を`16 / 10` → `16 / 9`に変更
 </details>
+
+<details>
+<summary>splitSlides関数の重大なバグ修正 (2025-10-28)</summary>
+
+### 問題
+
+`generate-slides.js`のスライド分割ロジックに重大なバグがあり、スライド3以降のコンテンツが正しく抽出されていなかった。
+
+**症状**:
+- スライド3が空白で表示される
+- frontmatterの直後の`---`を新しいスライドの開始として認識できない
+- スライド1には「タイトル+次のスライドのfrontmatter」が含まれてしまう
+
+**原因**:
+```javascript
+// 旧ロジック
+else if (!inFrontmatter && frontmatterCount === 2) {
+  // スライド区切り
+  if (currentBlock.length > 0) {
+    blocks.push(currentBlock.join('\n'));
+    currentBlock = [];  // ❌ 新しいブロックが空で始まる
+  }
+  frontmatterCount = 0;
+}
+```
+
+frontmatterが終了した後（frontmatterCount=2）、次の`---`に遭遇したときに現在のブロックを終了するが、その`---`自体を新しいブロックに含めていなかった。
+
+### 修正
+
+```javascript
+// 新ロジック
+else if (!inFrontmatter && frontmatterCount === 2) {
+  // 新しいスライドの開始 = 現在のブロックを終了して、新しいfrontmatterを開始
+  if (currentBlock.length > 0) {
+    blocks.push(currentBlock.join('\n'));
+  }
+  currentBlock = [line]; // ✅ 新しいブロックの最初の行として---を追加
+  inFrontmatter = true;
+  frontmatterCount = 1;
+}
+```
+
+### 検証結果
+
+**修正前**:
+- スライド数: 30枚（誤った分割）
+- スライド3: 空のコンテンツ
+
+**修正後**:
+- スライド数: 16枚（正しい分割）
+- スライド3: two-columnレイアウトで241文字のコンテンツを正しく表示
+
+### 付随修正: prepare-presentation.sh
+
+ワークフローのパス解決も修正:
+
+1. **リソースディレクトリ**: `resources` → `.claude/skills/slide-generator/resources`
+2. **デプロイディレクトリ**: `deploy` → `.claude/skills/slide-generator/deploy`
+3. **サムネイル生成**: 相対パスではなく絶対パスで実行
+
+**ファイル**:
+- `.claude/skills/slide-generator/scripts/generate-slides.js` (splitSlides関数)
+- `.claude/skills/slide-generator/scripts/prepare-presentation.sh` (パス修正)
+</details>

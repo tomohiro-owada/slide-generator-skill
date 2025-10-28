@@ -42,23 +42,27 @@ function splitSlides(text) {
 
   for (const line of lines) {
     if (line === '---') {
-      if (!inFrontmatter) {
-        // frontmatter開始
+      if (!inFrontmatter && frontmatterCount === 0) {
+        // frontmatter開始（最初のスライド）
         inFrontmatter = true;
-        frontmatterCount++;
+        frontmatterCount = 1;
         currentBlock.push(line);
-      } else if (frontmatterCount === 1) {
+      } else if (inFrontmatter && frontmatterCount === 1) {
         // frontmatter終了
         inFrontmatter = false;
-        frontmatterCount++;
+        frontmatterCount = 2;
         currentBlock.push(line);
-      } else {
-        // スライド区切り
+      } else if (!inFrontmatter && frontmatterCount === 2) {
+        // 新しいスライドの開始 = 現在のブロックを終了して、新しいfrontmatterを開始
         if (currentBlock.length > 0) {
           blocks.push(currentBlock.join('\n'));
-          currentBlock = [];
         }
-        frontmatterCount = 0;
+        currentBlock = [line]; // 新しいブロックの最初の行として---を追加
+        inFrontmatter = true;
+        frontmatterCount = 1;
+      } else {
+        // その他のケース
+        currentBlock.push(line);
       }
     } else {
       currentBlock.push(line);
