@@ -54,18 +54,14 @@ echo ""
 # deployディレクトリを作成
 mkdir -p "$DEPLOY_DIR"
 
-# resources を deploy 直下にコピー（まだ存在しない場合のみ）
-if [ ! -d "$DEPLOY_DIR/resources" ]; then
-    echo -e "${YELLOW}📚 共通リソースをセットアップしています...${NC}"
-    if [ -d "resources" ]; then
-        cp -r resources "$DEPLOY_DIR/"
-        echo -e "${GREEN}  ✓ resources をコピーしました${NC}"
-    else
-        echo -e "${RED}  ✗ resources が見つかりません${NC}"
-        exit 1
-    fi
+# resources を deploy 直下にコピー（毎回更新）
+echo -e "${YELLOW}📚 共通リソースを更新しています...${NC}"
+if [ -d "resources" ]; then
+    cp -r resources "$DEPLOY_DIR/"
+    echo -e "${GREEN}  ✓ resources をコピーしました${NC}"
 else
-    echo -e "${GREEN}✓ 共通リソースは既にセットアップされています${NC}"
+    echo -e "${RED}  ✗ resources が見つかりません${NC}"
+    exit 1
 fi
 
 # スライドディレクトリを作成
@@ -78,7 +74,8 @@ cp "$HTML_FILE" "$SLIDE_DIR/index.html"
 
 # HTMLファイル内のパスを相対パスに修正
 echo -e "${YELLOW}🔧 パスを調整しています...${NC}"
-sed -i.bak 's|resources/|../resources/|g' "$SLIDE_DIR/index.html"
+sed -i.bak 's|\./\.claude/skills/slide-generator/resources/|../resources/|g' "$SLIDE_DIR/index.html"
+sed -i.bak 's|\.claude/skills/slide-generator/resources/|../resources/|g' "$SLIDE_DIR/index.html"
 rm "$SLIDE_DIR/index.html.bak"
 echo -e "${GREEN}  ✓ パスを相対パスに変更しました${NC}"
 
