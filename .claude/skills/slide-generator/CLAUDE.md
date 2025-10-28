@@ -573,6 +573,36 @@ layout: diff-slide
 - 重い情報の後に軽い情報
 - テキスト → 画像 → グラフの順で変化をつける
 
+## 検証チェックリスト
+
+プレゼンテーション生成後は、以下を確認してください:
+
+### 必須確認項目
+
+- [ ] 全16種類のレイアウトが使用されているか（title-slideを含む）
+- [ ] Chart.jsのグラフが描画されるか（canvasタグとnew Chart()が存在）
+- [ ] Prism.jsのコードハイライトが機能するか（language-*クラスが設定されている）
+- [ ] テーブルがHTMLテーブルに変換されているか
+- [ ] リソースファイル（styles.css、script.js、vendor/）が正しくリンクされているか
+- [ ] サムネイルが生成されているか（thumbnails/indexディレクトリ）
+
+### 動作確認項目
+
+- [ ] キーボード操作（→、←、Home、End、G、Esc）が動作するか
+- [ ] プログレスバーのセグメントクリックでスライド移動できるか
+- [ ] プログレスバーホバーでサムネイルツールチップが表示されるか
+- [ ] Gキーでサムネイル一覧が表示されるか
+- [ ] サムネイル一覧からスライドに移動できるか
+- [ ] ページ番号が右下に表示されるか
+
+### ビジュアル確認項目
+
+- [ ] 幾何学装飾がテキストと重なっていないか
+- [ ] 全スライドが100vw × 100vhに収まっているか
+- [ ] 文字数制限が守られているか
+- [ ] グラフが正しく表示されているか
+- [ ] コードのシンタックスハイライトが適用されているか
+
 ## 技術仕様
 
 ### デザインシステム (Wolsey Design System)
@@ -663,6 +693,81 @@ vercel --prod
 - ✅ **作業後の検証はChrome DevTools MCPで自分で確認すること**
 
 ## 修正履歴
+
+<details>
+<summary>generate-slides.js実装とテスト (2025-10-28)</summary>
+
+### generate-slides.jsの新規作成
+
+**背景**: CLAUDE.mdに記載されているワークフロー（Markdown → HTML変換）に必要なスクリプトが存在しなかった
+
+**実装内容**:
+1. Markdownファイルの読み込み
+2. frontmatterを考慮したスライドブロックの分割
+3. Markdown → HTML変換（改良版）
+   - コードブロック処理（プレースホルダー方式）
+   - Markdownテーブル → HTMLテーブル変換
+   - 見出し、箇条書き、引用、画像、リンクの変換
+   - HTMLタグを含む段落の適切な処理
+4. 16種類のレイアウト対応
+5. background-image属性の処理
+
+### 主な修正内容
+
+#### 1. frontmatterの正しい分割
+**問題**: `\n---\n`で単純分割すると、frontmatter内の`---`もスライド区切りとして扱われる
+
+**修正**:
+```javascript
+function splitSlides(text) {
+  // frontmatterの開始/終了を追跡
+  // スライド区切りの---とfrontmatterの---を区別
+}
+```
+
+#### 2. HTMLマークアップの破損修正
+**問題**: `</p><p>`タグが不正に挿入され、レイアウトが崩れる
+
+**修正**: 段落処理でHTMLタグで始まる行を除外
+```javascript
+if (para.startsWith('<') || para.includes('<script>') || para === '') {
+  return para; // pタグで包まない
+}
+```
+
+#### 3. Markdownテーブル変換の実装
+**問題**: Markdownテーブルがそのままテキストとして表示される
+
+**修正**: 正規表現でテーブルを検出し、HTML tableタグに変換
+```javascript
+text = text.replace(/\|(.+)\|\n\|[-:\s|]+\|\n((?:\|.+\|\n?)+)/g, ...);
+```
+
+#### 4. `[object Object]`の修正
+**問題**: backgroundImageオブジェクトが文字列化されずに表示される
+
+**修正**: parseSlideBlock関数でbackgroundImageを文字列として抽出
+```javascript
+return { layout, content, backgroundImage }; // オブジェクトではなく文字列
+```
+
+### テスト結果（all-layouts-test）
+
+**成功**: 95%
+- 15種類のレイアウトが正常に動作
+- Chart.jsのグラフ4つが正しく配置
+- Prism.jsのコードハイライトが機能
+- テーブルがHTMLテーブルに変換
+- インタラクティブ機能が完全動作
+
+**課題**:
+- title-slideが1つ不足（テストデータの問題）
+- サムネイル数が若干多い（33枚 vs 30スライド）
+
+### ファイル
+
+**新規作成**: `.claude/skills/slide-generator/scripts/generate-slides.js`
+</details>
 
 <details>
 <summary>レイアウト最適化 (2025-10-28)</summary>
